@@ -29,6 +29,7 @@ RUN apt-get update -y && \
 {% if content %}
 {% block content_setup %}
 RUN mkdir -p /etc/module-content/data
+COPY content_config.ini /etc/module-content/config.ini
 {% for part in content %}
 COPY {{ part.source }} /etc/module-content/data/{{ part.target }}
 {% endfor %}

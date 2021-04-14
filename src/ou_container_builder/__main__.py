@@ -35,6 +35,11 @@ def main(config, build, clean):
         if settings['type'] == 'jupyter-notebook':
             jupyter_notebook.generate(env, settings)
 
+        if 'content' in settings and settings['content']:
+            with open('build/content_config.ini', 'w') as out_f:
+                tmpl = env.get_template('content_config.ini')
+                out_f.write(tmpl.render(**settings))
+
         if build:
             subprocess.run(('docker', 'build', '.'), cwd='build')
             if clean:
