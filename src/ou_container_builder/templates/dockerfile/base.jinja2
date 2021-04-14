@@ -1,0 +1,49 @@
+{% block from %}{% endblock %}
+
+{% block environment %}
+ENV USER="ou-user"
+ENV UID="1000"
+ENV GID="100"
+ENV MODULE_CODE="{{ module.code }}"
+ENV MODULE_PRESENTATION="{{ module.presentation }}"
+ENV HOME="/home/$USER"
+ENV MODULE_HOME="$HOME/$MODULE_CODE-$MODULE_PRESENTATION"
+{% endblock %}
+
+USER root
+
+{% block createuser %}
+RUN useradd -u $UID -g $GID -d /home/$USER -m $USER && \
+    mkdir -p $MODULE_HOME
+{% endblock %}
+
+{% block apt %}
+RUN apt-get update -y && \
+    apt-get install -y tini
+{% endblock %}
+
+{% block pip %}{% endblock %}
+
+{% block jupyter_setup %}{% endblock %}
+
+{% if content %}
+{% block content_setup %}
+RUN mkdir -p /etc/module-content/data
+{% for part in content %}
+COPY {{ part.source }} /etc/module-content/data/{{ part.target }}
+{% endfor %}
+{% endblock %}
+{% endif %}
+
+{% block set_permissions %}
+RUN chown -R $USER:$GID $HOME
+{% endblock %}
+
+USER $USER
+
+{% block runtime_environment %}
+WORKDIR $MODULE_HOME
+ENTRYPOINT ["tini", "-g", "--"]
+{% endblock %}
+
+{% block cmd %}{% endblock %}
