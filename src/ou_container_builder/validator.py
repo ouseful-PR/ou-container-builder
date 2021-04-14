@@ -1,6 +1,7 @@
 import click
 
 from cerberus import Validator
+from typing import Union
 
 
 schema = {
@@ -38,7 +39,7 @@ schema = {
                 },
                 'overwrite': {
                     'type': 'string',
-                    'allowed': ['always', 'if-missing', 'if-unchanged']
+                    'allowed': ['always', 'never', 'if-unchanged']
                 }
             }
         }
@@ -46,8 +47,14 @@ schema = {
 }
 
 
-def validate_settings(settings):
-    """Validate the configuration settings against the configuration schema."""
+def validate_settings(settings: dict) -> Union[dict, bool]:
+    """Validate the configuration settings against the configuration schema.
+
+    :param settings: The settings parsed from the configuration file
+    :type settings: dict
+    :return: The validated and normalised settings if they are valid, otherwise ``False``
+    :rtype: boolean or dict
+    """
     validator = Validator(schema)
     if settings and validator.validate(settings):
         return validator.normalized(settings)

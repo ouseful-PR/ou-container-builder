@@ -6,10 +6,17 @@
 OU Container Builder
 ====================
 
+The OU Container Builder is a small command-line application to build a Docker container either for online hosted use
+via JupyterHub or for local use with Docker.
+
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
+   installation
+   building
+   configuration
+   api/index
 
 
 Indices and tables

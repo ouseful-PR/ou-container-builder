@@ -1,5 +1,14 @@
-def generate(env, settings):
-    """Generate the Dockerfile for a Jupyter Notebook container."""
+from jinja2 import Environment
+
+
+def generate(env: Environment, settings: dict):
+    """Generate the Dockerfile for a Jupyter Notebook container.
+
+    :param env: The Jinja2 environment to use for loading and rendering templates
+    :type env: :class:`~jinja2.environment.Environment`
+    :param settings: The settings parsed from the configuration file
+    :type settings: dict
+    """
     with open('build/Dockerfile', 'w') as out_f:
         if settings['type'] == 'jupyter-notebook':
             tmpl = env.get_template('dockerfile/jupyter-notebook.jinja2')
