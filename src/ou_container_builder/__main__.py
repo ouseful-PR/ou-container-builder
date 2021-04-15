@@ -34,7 +34,7 @@ def main(config, build, clean):
     settings = load(config, Loader=Loader)
     settings = validate_settings(settings)
 
-    if settings:
+    if isinstance(settings, dict):
         env = Environment(loader=PackageLoader('ou_container_builder', 'templates'),
                           autoescape=False)
 
@@ -55,6 +55,12 @@ def main(config, build, clean):
             if clean:
                 if os.path.exists('build'):
                     shutil.rmtree('build')
+    else:
+        click.echo(click.style('There are errors in your configuration settings:', fg='red'), err=True)
+        click.echo(err=True)
+
+        for error in settings:
+            click.echo(error, err=True)
 
 
 if __name__ == '__main__':

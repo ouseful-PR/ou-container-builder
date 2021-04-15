@@ -18,6 +18,7 @@ flake8 = "^3.9.0"
 flake8-docstrings = "^1.6.0"
 flake8-print = "^4.0.0"
 pre-commit = "^2.12.0"
+pytest = "^6.2.3"
 
 [tool.poetry.scripts]
 ou-container-builder = 'ou_container_builder.__main__:main'

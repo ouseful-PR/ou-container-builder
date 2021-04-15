@@ -1,0 +1,54 @@
+name: Tests
+
+on:
+  push:
+    branches: [ default ]
+  pull_request:
+    branches: [ default ]
+
+jobs:
+  tests:
+    runs-on: ubuntu-20.04
+    strategy:
+      max-parallel: 2
+      matrix:
+        python-version: ['3.8', '3.9']
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Dependencies
+      run: |
+        pip3 install tox
+
+    - name: Run Tests
+      run: |
+        mkdir tmp
+        tox -e ${{matrix.python-version}}
+
+  doc_tests:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install python3-venv
+        sudo pip3 install poetry
+        poetry install
+
+    - name: Test Docs Build
+      run: |
+        cd documentation
+        poetry run make clean
+        poetry run make build
