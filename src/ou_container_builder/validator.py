@@ -1,3 +1,4 @@
+"""Configuration validator for the OU Container Builder ContainerConfig.yaml."""
 import click
 
 from cerberus import Validator
@@ -72,7 +73,7 @@ def validate_settings(settings: dict) -> Union[dict, bool]:
                 for sub_err in err:
                     walk_error_tree(sub_err, path)
             else:
-                print(f'{".".join(path)}: {err}')
+                click.echo(f'{".".join(path)}: {err}')
 
         walk_error_tree(validator.errors, ())
         return False

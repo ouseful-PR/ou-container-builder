@@ -1,3 +1,4 @@
+"""The main OU Container Builder commandline application."""
 import click
 import os
 import shutil
@@ -15,16 +16,25 @@ from .validator import validate_settings
 
 
 @click.command()
-@click.option('-c', '--config', type=click.File(), default='ContainerConfig.yaml', help='Configuration file', show_default=True)
-@click.option('-b/-nb', '--build/--no-build', default=True, help='Automatically build the container', show_default=True)
-@click.option('--clean/--no-clean', default=True, help='Automatically clean up after building the container', show_default=True)
+@click.option('-c', '--config',
+              type=click.File(),
+              default='ContainerConfig.yaml',
+              help='Configuration file',
+              show_default=True)
+@click.option('-b/-nb', '--build/--no-build',
+              default=True,
+              help='Automatically build the container',
+              show_default=True)
+@click.option('--clean/--no-clean',
+              default=True,
+              help='Automatically clean up after building the container',
+              show_default=True)
 def main(config, build, clean):
-    """Build your OU Container"""
+    """Build your OU Container."""
     settings = load(config, Loader=Loader)
     settings = validate_settings(settings)
 
     if settings:
-
         env = Environment(loader=PackageLoader('ou_container_builder', 'templates'),
                           autoescape=False)
 
@@ -45,6 +55,7 @@ def main(config, build, clean):
             if clean:
                 if os.path.exists('build'):
                     shutil.rmtree('build')
+
 
 if __name__ == '__main__':
     main()

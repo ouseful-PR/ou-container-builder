@@ -1,3 +1,4 @@
+"""Build containers based on a Jupyter Notebook."""
 from jinja2 import Environment
 
 
