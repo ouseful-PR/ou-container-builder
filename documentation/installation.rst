@@ -10,4 +10,4 @@ Then, to install the OU Container Builder run
 
 .. sourcecode:: console
 
-    $ pipx install https://github.com/mmh352/ou-container-builder.git
+    $ pipx install git+https://github.com/mmh352/ou-container-builder.git

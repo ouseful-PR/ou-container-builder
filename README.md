@@ -12,7 +12,7 @@ To run the OU Container Builder you need to install the following two requiremen
 Then, to install the OU Container Builder run
 
 ```
-pipx install https://github.com/mmh352/ou-container-builder.git
+pipx install git+https://github.com/mmh352/ou-container-builder.git
 ```
 
 You can then run the OU Container Builder using the following command:
