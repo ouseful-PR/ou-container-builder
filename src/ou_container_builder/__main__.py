@@ -15,7 +15,7 @@ from .validator import validate_settings
 
 
 @click.command()
-@click.option('-c', '--config', type=click.File(), default='config.yaml', help='Configuration file', show_default=True)
+@click.option('-c', '--config', type=click.File(), default='ContainerConfig.yaml', help='Configuration file', show_default=True)
 @click.option('-b/-nb', '--build/--no-build', default=True, help='Automatically build the container', show_default=True)
 @click.option('--clean/--no-clean', default=True, help='Automatically clean up after building the container', show_default=True)
 def main(config, build, clean):

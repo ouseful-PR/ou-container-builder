@@ -2,8 +2,8 @@ Configuration File
 ==================
 
 The OU Container Builder uses a YAML configuration file to define which components are included in the final Docker
-container. By default the Builder expects this file to be called ``config.yaml``, but this can be overridden on the
-command-line. The available settings are split into required settings and optional settings.
+container. By default the Builder expects this file to be called ``ContainerConfig.yaml``, but this can be overridden
+on the command-line. The available settings are split into required settings and optional settings.
 
 The required settings are
 
