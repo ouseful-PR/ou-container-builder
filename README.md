@@ -64,3 +64,14 @@ ou-container-builder
 ```
 
 to run your development version of the code.
+
+### Validation
+
+To automatically check that any committed code follows the Python guidelines, install a git pre-commit hook using
+the following command:
+
+```
+pre-commit install
+```
+
+Validation checks are automatically run and must be passed before code can be merged into the default branch.
