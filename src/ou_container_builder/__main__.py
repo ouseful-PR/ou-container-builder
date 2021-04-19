@@ -11,15 +11,14 @@ try:
 except ImportError:
     from yaml import Loader
 
-from . import jupyter_notebook
+from . import jupyter_notebook, web_app
 from .validator import validate_settings
 
 
 @click.command()
-@click.option('-c', '--config',
-              type=click.File(),
-              default='ContainerConfig.yaml',
-              help='Configuration file',
+@click.option('-c', '--context',
+              default='.',
+              help='Context within which the container will be built',
               show_default=True)
 @click.option('-b/-nb', '--build/--no-build',
               default=True,
@@ -29,29 +28,32 @@ from .validator import validate_settings
               default=True,
               help='Automatically clean up after building the container',
               show_default=True)
-def main(config, build, clean):
+def main(context, build, clean):
     """Build your OU Container."""
-    settings = load(config, Loader=Loader)
+    with open(os.path.join(context, 'ContainerConfig.yaml')) as config_f:
+        settings = load(config_f, Loader=Loader)
     settings = validate_settings(settings)
 
     if isinstance(settings, dict):
         env = Environment(loader=PackageLoader('ou_container_builder', 'templates'),
                           autoescape=False)
 
-        if os.path.exists('build'):
-            shutil.rmtree('build')
-        shutil.copytree('.', 'build')
+        if os.path.exists(os.path.join(context, 'build')):
+            shutil.rmtree(os.path.join(context, 'build'))
+        os.makedirs(os.path.join(context, 'build'))
 
         if settings['type'] == 'jupyter-notebook':
-            jupyter_notebook.generate(env, settings)
+            jupyter_notebook.generate(context, env, settings)
+        elif settings['type'] == 'web-app':
+            web_app.generate(context, env, settings)
 
         if 'content' in settings and settings['content']:
-            with open('build/content_config.ini', 'w') as out_f:
+            with open(os.path.join(context, 'build', 'content_config.ini'), 'w') as out_f:
                 tmpl = env.get_template('content_config.ini')
                 out_f.write(tmpl.render(**settings))
 
         if build:
-            subprocess.run(('docker', 'build', '.'), cwd='build')
+            subprocess.run(('docker', 'build', context))
             if clean:
                 if os.path.exists('build'):
                     shutil.rmtree('build')

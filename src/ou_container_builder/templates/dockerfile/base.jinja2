@@ -17,24 +17,53 @@ RUN useradd -u $UID -g $GID -d /home/$USER -m $USER && \
     mkdir -p $MODULE_HOME
 {% endblock %}
 
-{% block apt %}
 RUN apt-get update -y && \
-    apt-get install -y tini
+    apt-get install -y tini{% if sources.apt %} curl gnupg{% endif %}
+
+{% block apt_sources %}
+{% if sources.apt %}
+{% for source in sources.apt %}
+RUN curl -fsSL "{{ source.key }}" | apt-key --keyring "/etc/apt/trusted.gpg.d/{{ source.name }}.gpg" add - && \
+    echo "{{ source.deb }}" > "/etc/apt/sources.list.d/{{ source.name }}.list"
+{% endfor %}
+RUN apt-get update -y && \
+    apt-get dist-upgrade -y
+{% endif %}
+{% endblock %}
+
+{% block apt %}
+{% if packages.apt %}
+RUN apt install -y {{ ' '.join(packages.apt) }}
+{% endif %}
 {% endblock %}
 
 {% block pip %}{% endblock %}
 
-{% block jupyter_setup %}{% endblock %}
-
 {% if content %}
 {% block content_setup %}
 RUN mkdir -p /etc/module-content/data
-COPY content_config.ini /etc/module-content/config.ini
+COPY build/content_config.ini /etc/module-content/config.ini
 {% for part in content %}
+{% if part.target.startswith('/') %}
+COPY {{ part.source }} {{ part.target }}
+{% else %}
 COPY {{ part.source }} /etc/module-content/data/{{ part.target }}
+{% endif %}
 {% endfor %}
 {% endblock %}
 {% endif %}
+
+{% block scripts %}
+{% if scripts %}
+{% for script in scripts %}
+{% if script.inline %}
+RUN {{ ' && \\\n    '.join(script.inline) }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endblock %}
+
+{% block application %}{% endblock %}
 
 {% block set_permissions %}
 RUN chown -R $USER:$GID $HOME

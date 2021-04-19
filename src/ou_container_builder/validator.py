@@ -21,7 +21,7 @@ schema = {
     'type': {
         'type': 'string',
         'required': True,
-        'allowed': ['jupyter-notebook']
+        'allowed': ['jupyter-notebook', 'web-app']
     },
     'content': {
         'type': 'list',
@@ -43,6 +43,74 @@ schema = {
                     'required': True,
                     'allowed': ['always', 'never', 'if-unchanged']
                 }
+            }
+        }
+    },
+    'sources': {
+        'type': 'dict',
+        'schema': {
+            'apt': {
+                'type': 'list',
+                'schema': {
+                    'type': 'dict',
+                    'schema': {
+                        'name': {
+                            'type': 'string',
+                            'required': True,
+                            'empty': False
+                        },
+                        'key': {
+                            'type': 'string',
+                            'required': True,
+                            'empty': False,
+                        },
+                        'deb': {
+                            'type': 'string',
+                            'required': True,
+                            'empty': False,
+                        }
+                    }
+                }
+            }
+        }
+    },
+    'packages': {
+        'type': 'dict',
+        'schema': {
+            'apt': {
+                'type': 'list',
+                'schema': {
+                    'type': 'string'
+                }
+            }
+        }
+    },
+    'scripts': {
+        'type': 'list',
+        'schema': {
+            'type': 'dict',
+            'schema': {
+                'inline': {
+                    'type': 'list',
+                    'schema': {
+                        'type': 'string'
+                    }
+                }
+            }
+        }
+    },
+    'web_app': {
+        'type': 'dict',
+        'schema': {
+            'cmdline': {
+                'type': 'string',
+                'required': True,
+                'empty': False
+            },
+            'port': {
+                'type': 'integer',
+                'required': False,
+                'default': 0
             }
         }
     }

@@ -92,6 +92,19 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-metadata">Module metadata</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#container-type">Container type</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#content-to-distribute">Content to distribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sources">Sources</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#apt">Apt</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#packages">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Apt</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scripts">Scripts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#inline-scripts">Inline Scripts</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nested-web-application">Nested Web Application</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/index.html">API</a></li>
@@ -173,7 +186,11 @@ on the command-line. The available settings are split into required settings and
 </pre></div>
 </div>
 <p>The optional settings are</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">content</span><span class="p">:</span>  <span class="c1"># Content to distribute with the container</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">content</span><span class="p">:</span>   <span class="c1"># Content to distribute with the container</span>
+<span class="nt">sources</span><span class="p">:</span>   <span class="c1"># Additional sources to fetch packages from</span>
+<span class="nt">packages</span><span class="p">:</span>  <span class="c1"># Additional packages to install</span>
+<span class="nt">scripts</span><span class="p">:</span>   <span class="c1"># Scripts to run during the install process</span>
+<span class="nt">web_app</span><span class="p">:</span>   <span class="c1"># Configuration options for the nested web application</span>
 </pre></div>
 </div>
 <div class="section" id="module-metadata">
@@ -190,12 +207,16 @@ each other’s files. The module metadata consists of two values:</p>
 <div class="section" id="container-type">
 <h2>Container type<a class="headerlink" href="#container-type" title="Permalink to this headline">¶</a></h2>
 <p>The OU Container Builder will be able to generate multiple types of containers. This configuration setting is used to
-determine which of the container types to generate. Currently only a single type <code class="docutils literal notranslate"><span class="pre">jupyter-notebook</span></code> is supported.
-However, to ensure that the build process will work without changes when further types are added, the type has to be
-specified now.</p>
+determine which of the container types to generate. It supports the types <code class="docutils literal notranslate"><span class="pre">jupyter-notebook</span></code> and <code class="docutils literal notranslate"><span class="pre">web-app</span></code>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jupyter-notebook</span>
 </pre></div>
 </div>
+<p>Specifies that the container runs a Jupyter Notebook.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">web-app</span>
+</pre></div>
+</div>
+<p>Specifies that the container runs a web application. How the web application is run needs to be configured through
+the <a class="reference internal" href="#nested-web-application">Nested Web Application</a> setting.</p>
 </div>
 <div class="section" id="content-to-distribute">
 <h2>Content to distribute<a class="headerlink" href="#content-to-distribute" title="Permalink to this headline">¶</a></h2>
@@ -230,6 +251,97 @@ starts the next time, the deleted content will automatically be replaced with th
 <p>If you remove content that had previously been distributed to users, this content will <strong>not</strong> be removed
 automatically from the user’s home directory.</p>
 </div>
+</div>
+<div class="section" id="sources">
+<h2>Sources<a class="headerlink" href="#sources" title="Permalink to this headline">¶</a></h2>
+<p>The OU Container Builder supports adding additional software sources to the system before installing packages.
+Currently it only supports additional sources for the apt package manager.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sources</span><span class="p">:</span>
+  <span class="nt">apt</span><span class="p">:</span>    <span class="c1"># Additional sources for the apt package manager</span>
+</pre></div>
+</div>
+<div class="section" id="apt">
+<h3>Apt<a class="headerlink" href="#apt" title="Permalink to this headline">¶</a></h3>
+<p>The apt configuration setting supports a list of additional package repositories that can be installed:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sources</span><span class="p">:</span>
+  <span class="nt">apt</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span>  <span class="c1"># Name of the repository</span>
+      <span class="nt">key</span><span class="p">:</span>   <span class="c1"># The URL to fetch the repository&#39;s signing key from</span>
+      <span class="nt">deb</span><span class="p">:</span>   <span class="c1"># The &quot;deb&quot; line to set as the repository&#39;s source</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the repository. Is used to generate the filenames that the <code class="docutils literal notranslate"><span class="pre">key</span></code> and <code class="docutils literal notranslate"><span class="pre">deb</span></code> entries are
+stored in.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">key</span></code>: The URL from which to fetch the repository’s signing key. This will be stored in a file called
+<code class="docutils literal notranslate"><span class="pre">/etc/apt/trusted.gpg.d/{name}.gpg</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">deb</span></code>: The entry of the repository’s source file. This specifies where the packages for this additional repository
+are fetched from. This value will be stored in a file called <code class="docutils literal notranslate"><span class="pre">/etc/apt/sources.list.d/{name}.list</span></code>.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="packages">
+<h2>Packages<a class="headerlink" href="#packages" title="Permalink to this headline">¶</a></h2>
+<p>The OU Container Builder supports specifying additional packages to install. Currently it only supports additional
+packages for the apt package manager.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">packages</span><span class="p">:</span>
+  <span class="nt">apt</span><span class="p">:</span>     <span class="c1"># Additional packages to install via the apt package manager</span>
+</pre></div>
+</div>
+<div class="section" id="id1">
+<h3>Apt<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The apt configuration setting supports a list of package names that are then installed via <code class="docutils literal notranslate"><span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">-y</span></code></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">packages</span><span class="p">:</span>
+  <span class="nt">apt</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pkg-name</span>  <span class="c1"># The name of the package to install</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="scripts">
+<h2>Scripts<a class="headerlink" href="#scripts" title="Permalink to this headline">¶</a></h2>
+<p>The OU Container Builder supports running arbitrary scripts during the container building process. These are run after
+all packages have been installed via the supported package managers.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">scripts</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">inline</span><span class="p">:</span>  <span class="c1"># Inline definition of the script</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">inline</span></code>: Specifies an inline script. Multiple inline scripts are possible in a single <code class="docutils literal notranslate"><span class="pre">ContainerConfig.yaml</span></code>.</p></li>
+</ul>
+<div class="section" id="inline-scripts">
+<h3>Inline Scripts<a class="headerlink" href="#inline-scripts" title="Permalink to this headline">¶</a></h3>
+<p>Inline scripts are defined directly within the <code class="docutils literal notranslate"><span class="pre">ContainerConfig.yaml</span></code> file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">scripts</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">inline</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">command</span>
+</pre></div>
+</div>
+<p>Any number of <code class="docutils literal notranslate"><span class="pre">command</span></code> entries are allowed and each one is run as specified here.</p>
+</div>
+</div>
+<div class="section" id="nested-web-application">
+<h2>Nested Web Application<a class="headerlink" href="#nested-web-application" title="Permalink to this headline">¶</a></h2>
+<p>The OU Container Builder supports building containers that run a web application via the <code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">web-app</span></code> setting.
+For these the following required, additional settings must be specified:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">web_app</span><span class="p">:</span>
+  <span class="nt">cmdline</span><span class="p">:</span>  <span class="c1"># The commandline used to start the nested web application</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cmdline</span></code>: The commandline to execute to start the nested web application. By default the wrapper that ensures the
+web application is made compatible with JupyterHub runs the web application on a random port. You can pass this port
+to the web application via the <code class="docutils literal notranslate"><span class="pre">{port}</span></code> substitution variable.</p></li>
+</ul>
+<p>The web application also supports the following optional settings:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">web_app</span><span class="p">:</span>
+  <span class="nt">port</span><span class="p">:</span>     <span class="c1"># Fixed port for the nested web application</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">port</span></code>: If the port of the web application cannot be changed, then you can use this to specify that the wrapper
+will always expect the nested web application to be listening on this port.</p></li>
+</ul>
 </div>
 </div>
 

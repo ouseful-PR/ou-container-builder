@@ -16,7 +16,11 @@ The optional settings are
 
 .. sourcecode:: yaml
 
-    content:  # Content to distribute with the container
+    content:   # Content to distribute with the container
+    sources:   # Additional sources to fetch packages from
+    packages:  # Additional packages to install
+    scripts:   # Scripts to run during the install process
+    web_app:   # Configuration options for the nested web application
 
 Module metadata
 ---------------
@@ -35,13 +39,20 @@ Container type
 --------------
 
 The OU Container Builder will be able to generate multiple types of containers. This configuration setting is used to
-determine which of the container types to generate. Currently only a single type ``jupyter-notebook`` is supported.
-However, to ensure that the build process will work without changes when further types are added, the type has to be
-specified now.
+determine which of the container types to generate. It supports the types ``jupyter-notebook`` and ``web-app``.
 
 .. sourcecode:: yaml
 
     type: jupyter-notebook
+
+Specifies that the container runs a Jupyter Notebook.
+
+.. sourcecode:: yaml
+
+    type: web-app
+
+Specifies that the container runs a web application. How the web application is run needs to be configured through
+the `Nested Web Application`_ setting.
 
 Content to distribute
 ---------------------
@@ -76,3 +87,108 @@ starts the next time, the deleted content will automatically be replaced with th
 
     If you remove content that had previously been distributed to users, this content will **not** be removed
     automatically from the user's home directory.
+
+
+Sources
+-------
+
+The OU Container Builder supports adding additional software sources to the system before installing packages.
+Currently it only supports additional sources for the apt package manager.
+
+.. sourcecode:: yaml
+
+    sources:
+      apt:    # Additional sources for the apt package manager
+
+Apt
++++
+
+The apt configuration setting supports a list of additional package repositories that can be installed:
+
+.. sourcecode:: yaml
+
+    sources:
+      apt:
+        - name:  # Name of the repository
+          key:   # The URL to fetch the repository's signing key from
+          deb:   # The "deb" line to set as the repository's source
+
+* ``name``: The name of the repository. Is used to generate the filenames that the ``key`` and ``deb`` entries are
+  stored in.
+* ``key``: The URL from which to fetch the repository's signing key. This will be stored in a file called
+  ``/etc/apt/trusted.gpg.d/{name}.gpg``.
+* ``deb``: The entry of the repository's source file. This specifies where the packages for this additional repository
+  are fetched from. This value will be stored in a file called ``/etc/apt/sources.list.d/{name}.list``.
+
+Packages
+--------
+
+The OU Container Builder supports specifying additional packages to install. Currently it only supports additional
+packages for the apt package manager.
+
+.. sourcecode:: yaml
+
+    packages:
+      apt:     # Additional packages to install via the apt package manager
+
+Apt
++++
+
+The apt configuration setting supports a list of package names that are then installed via ``apt-get install -y``
+
+.. sourcecode:: yaml
+
+    packages:
+      apt:
+        - pkg-name  # The name of the package to install
+
+Scripts
+-------
+
+The OU Container Builder supports running arbitrary scripts during the container building process. These are run after
+all packages have been installed via the supported package managers.
+
+.. sourcecode:: yaml
+
+    scripts:
+      - inline:  # Inline definition of the script
+
+* ``inline``: Specifies an inline script. Multiple inline scripts are possible in a single ``ContainerConfig.yaml``.
+
+Inline Scripts
+++++++++++++++
+
+Inline scripts are defined directly within the ``ContainerConfig.yaml`` file:
+
+.. sourcecode:: yaml
+
+    scripts:
+      - inline:
+        - command
+
+Any number of ``command`` entries are allowed and each one is run as specified here.
+
+Nested Web Application
+----------------------
+
+The OU Container Builder supports building containers that run a web application via the ``type: web-app`` setting.
+For these the following required, additional settings must be specified:
+
+.. sourcecode:: yaml
+
+    web_app:
+      cmdline:  # The commandline used to start the nested web application
+
+* ``cmdline``: The commandline to execute to start the nested web application. By default the wrapper that ensures the
+  web application is made compatible with JupyterHub runs the web application on a random port. You can pass this port
+  to the web application via the ``{port}`` substitution variable.
+
+The web application also supports the following optional settings:
+
+.. sourcecode:: yaml
+
+    web_app:
+      port:     # Fixed port for the nested web application
+
+* ``port``: If the port of the web application cannot be changed, then you can use this to specify that the wrapper
+  will always expect the nested web application to be listening on this port.
