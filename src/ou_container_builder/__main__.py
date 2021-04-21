@@ -41,9 +41,9 @@ def main(context, build, clean, tag):
         env = Environment(loader=PackageLoader('ou_container_builder', 'templates'),
                           autoescape=False)
 
-        if os.path.exists(os.path.join(context, 'build')):
-            shutil.rmtree(os.path.join(context, 'build'))
-        os.makedirs(os.path.join(context, 'build'))
+        if os.path.exists(os.path.join(context, 'ou-builder-build')):
+            shutil.rmtree(os.path.join(context, 'ou-builder-build'))
+        os.makedirs(os.path.join(context, 'ou-builder-build'))
 
         if settings['type'] == 'jupyter-notebook':
             jupyter_notebook.generate(context, env, settings)
@@ -51,12 +51,12 @@ def main(context, build, clean, tag):
             web_app.generate(context, env, settings)
 
         if 'content' in settings and settings['content']:
-            with open(os.path.join(context, 'build', 'content_config.yaml'), 'w') as out_f:
+            with open(os.path.join(context, 'ou-builder-build', 'content_config.yaml'), 'w') as out_f:
                 tmpl = env.get_template('content_config.yaml')
                 out_f.write(tmpl.render(**settings))
 
         if build:
-            cmd = ['docker', 'build', context]
+            cmd = ['docker', 'ou-builder-build', context]
             if tag:
                 for t in tag:
                     cmd.append('--tag')
@@ -65,8 +65,8 @@ def main(context, build, clean, tag):
             subprocess.run(cmd)
             if clean:
                 os.unlink(os.path.join(context, 'Dockerfile'))
-                if os.path.exists(os.path.join(context, 'build')):
-                    shutil.rmtree(os.path.join(context, 'build'))
+                if os.path.exists(os.path.join(context, 'ou-builder-build')):
+                    shutil.rmtree(os.path.join(context, 'ou-builder-build'))
     else:
         click.echo(click.style('There are errors in your configuration settings:', fg='red'), err=True)
         click.echo(err=True)

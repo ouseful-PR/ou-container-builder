@@ -19,6 +19,6 @@ def generate(context: str, env: Environment, settings: dict):
             tmpl = env.get_template('dockerfile/web-app.jinja2')
         out_f.write(tmpl.render(**settings))
 
-    with open(os.path.join(context, 'build', 'start-web-app.sh'), 'w') as out_f:
+    with open(os.path.join(context, 'ou-builder-build', 'start-web-app.sh'), 'w') as out_f:
         tmpl = env.get_template('start-web-app.sh')
         out_f.write(tmpl.render(**settings))

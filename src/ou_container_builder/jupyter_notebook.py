@@ -20,9 +20,9 @@ def generate(context: str, env: Environment, settings: dict):
         out_f.write(tmpl.render(**settings))
 
     if settings['type'] == 'jupyter-notebook':
-        with open(os.path.join(context, 'build', 'jupyter_notebook_config.py'), 'w') as out_f:
+        with open(os.path.join(context, 'ou-builder-build', 'jupyter_notebook_config.py'), 'w') as out_f:
             tmpl = env.get_template('jupyter_notebook_config.py')
             out_f.write(tmpl.render(**settings))
-        with open(os.path.join(context, 'build', 'start-notebook.sh'), 'w') as out_f:
+        with open(os.path.join(context, 'ou-builder-build', 'start-notebook.sh'), 'w') as out_f:
             tmpl = env.get_template('start-notebook.sh')
             out_f.write(tmpl.render(**settings))
