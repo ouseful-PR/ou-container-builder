@@ -5,6 +5,7 @@ FROM python:3.9-slim-buster
 {% endblock %}
 
 {% block pip%}
+{{ super() }}
 RUN pip install --no-cache jhsingle-native-proxy
 {% endblock %}
 

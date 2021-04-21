@@ -28,7 +28,10 @@ from .validator import validate_settings
               default=True,
               help='Automatically clean up after building the container',
               show_default=True)
-def main(context, build, clean):
+@click.option('--tag',
+              multiple=True,
+              help='Automatically tag the generated image')
+def main(context, build, clean, tag):
     """Build your OU Container."""
     with open(os.path.join(context, 'ContainerConfig.yaml')) as config_f:
         settings = load(config_f, Loader=Loader)
@@ -48,15 +51,22 @@ def main(context, build, clean):
             web_app.generate(context, env, settings)
 
         if 'content' in settings and settings['content']:
-            with open(os.path.join(context, 'build', 'content_config.ini'), 'w') as out_f:
-                tmpl = env.get_template('content_config.ini')
+            with open(os.path.join(context, 'build', 'content_config.yaml'), 'w') as out_f:
+                tmpl = env.get_template('content_config.yaml')
                 out_f.write(tmpl.render(**settings))
 
         if build:
-            subprocess.run(('docker', 'build', context))
+            cmd = ['docker', 'build', context]
+            if tag:
+                for t in tag:
+                    cmd.append('--tag')
+                    cmd.append(f'mmh352/{settings["module"]["code"].lower()}' +
+                               '-{settings["module"]["presentation"].lower()}:{t}')
+            subprocess.run(cmd)
             if clean:
-                if os.path.exists('build'):
-                    shutil.rmtree('build')
+                os.unlink(os.path.join(context, 'Dockerfile'))
+                if os.path.exists(os.path.join(context, 'build')):
+                    shutil.rmtree(os.path.join(context, 'build'))
     else:
         click.echo(click.style('There are errors in your configuration settings:', fg='red'), err=True)
         click.echo(err=True)

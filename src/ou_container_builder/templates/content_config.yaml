@@ -1,0 +1,8 @@
+paths:
+  {% for part in content %}
+    {% if not part.target.startswith('/') %}
+  - source: /etc/module-content/data{% if part.target %}/{% endif %}{{ part.target }}
+    target: /home/ou-user/{{ module.code }}-{{ module.presentation }}{% if part.target %}/{% endif %}{{ part.target }}
+    overwrite: {{ part.overwrite }}
+    {% endif %}
+  {% endfor %}

@@ -6,22 +6,21 @@ ENV UID="1000"
 ENV GID="100"
 ENV MODULE_CODE="{{ module.code }}"
 ENV MODULE_PRESENTATION="{{ module.presentation }}"
-ENV HOME="/home/$USER"
-ENV MODULE_HOME="$HOME/$MODULE_CODE-$MODULE_PRESENTATION"
+ENV HOME="/home/$USER/$MODULE_CODE-$MODULE_PRESENTATION"
 {% endblock %}
 
 USER root
 
 {% block createuser %}
-RUN useradd -u $UID -g $GID -d /home/$USER -m $USER && \
-    mkdir -p $MODULE_HOME
+RUN mkdir /home/$USER && \
+    useradd -u $UID -g $GID -d $HOME -m $USER
 {% endblock %}
 
 RUN apt-get update -y && \
-    apt-get install -y tini{% if sources.apt %} curl gnupg{% endif %}
+    apt-get install -y tini{% if sources and sources.apt %} curl gnupg{% endif %}{% if content%} git{% endif%}
 
 {% block apt_sources %}
-{% if sources.apt %}
+{% if sources and sources.apt %}
 {% for source in sources.apt %}
 RUN curl -fsSL "{{ source.key }}" | apt-key --keyring "/etc/apt/trusted.gpg.d/{{ source.name }}.gpg" add - && \
     echo "{{ source.deb }}" > "/etc/apt/sources.list.d/{{ source.name }}.list"
@@ -32,7 +31,7 @@ RUN apt-get update -y && \
 {% endblock %}
 
 {% block apt %}
-{% if packages.apt %}
+{% if packages and packages.apt %}
 RUN apt install -y {{ ' '.join(packages.apt) }}
 {% endif %}
 {% endblock %}
@@ -41,8 +40,9 @@ RUN apt install -y {{ ' '.join(packages.apt) }}
 
 {% if content %}
 {% block content_setup %}
-RUN mkdir -p /etc/module-content/data
-COPY build/content_config.ini /etc/module-content/config.ini
+RUN mkdir -p /etc/module-content/data && \
+    pip install --no-cache git+https://github.com/mmh352/ou-container-content.git
+COPY build/content_config.yaml /etc/module-content/config.yaml
 {% for part in content %}
 {% if part.target.startswith('/') %}
 COPY {{ part.source }} {{ part.target }}
@@ -72,7 +72,7 @@ RUN chown -R $USER:$GID $HOME
 USER $USER
 
 {% block runtime_environment %}
-WORKDIR $MODULE_HOME
+WORKDIR $HOME
 ENTRYPOINT ["tini", "-g", "--"]
 {% endblock %}
 
