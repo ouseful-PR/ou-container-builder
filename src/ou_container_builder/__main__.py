@@ -61,7 +61,7 @@ def main(context, build, clean, tag):
                 for t in tag:
                     cmd.append('--tag')
                     cmd.append(f'mmh352/{settings["module"]["code"].lower()}' +
-                               '-{settings["module"]["presentation"].lower()}:{t}')
+                               f'-{settings["module"]["presentation"].lower()}:{t}')
             subprocess.run(cmd)
             if clean:
                 os.unlink(os.path.join(context, 'Dockerfile'))
