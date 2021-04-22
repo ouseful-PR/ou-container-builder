@@ -134,6 +134,32 @@ schema = {
             'type': 'string',
             'allowed': ['tutorial-server']
         }
+    },
+    'tutorial_server': {
+        'type': 'dict',
+        'schema': {
+            'parts': {
+                'type': 'list',
+                'schema': {
+                    'type': 'dict',
+                    'schema': {
+                        'name': {
+                            'type': 'string',
+                            'required': True,
+                        },
+                        'type': {
+                            'type': 'string',
+                            'required': True,
+                            'allowed': ['tutorial', 'workspace']
+                        }
+                    }
+                }
+            },
+            'default': {
+                'type': 'string',
+                'required': True
+            }
+        }
     }
 }
 
