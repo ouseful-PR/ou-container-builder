@@ -6,14 +6,14 @@ FROM python:3.9-slim-buster
 
 {% block pip %}
 {{ super() }}
-RUN pip install --no-cache jupyterhub==1.3.0 notebook==6.0.0
+RUN pip install --no-cache jupyterhub==1.3.0 notebook==6.0.0{% if packs and 'tutorial-server' in packs %} jupyter-server-proxy{% endif %}
 {% endblock %}
 
 {% block application %}
 {{ super() }}
 RUN mkdir /etc/jupyter
-COPY build/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
-COPY build/start-notebook.sh /usr/bin/start.sh
+COPY ou-builder-build/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
+COPY ou-builder-build/start-notebook.sh /usr/bin/start.sh
 RUN chmod a+x /usr/bin/start.sh
 {% endblock %}
 

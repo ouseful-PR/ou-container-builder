@@ -82,6 +82,12 @@ schema = {
                 'schema': {
                     'type': 'string'
                 }
+            },
+            'pip': {
+                'type': 'list',
+                'schema': {
+                    'type': 'string'
+                }
             }
         }
     },
@@ -99,6 +105,14 @@ schema = {
             }
         }
     },
+    'jupyter_notebook': {
+        'type': 'dict',
+        'schema': {
+            'default_url': {
+                'type': 'string'
+            }
+        }
+    },
     'web_app': {
         'type': 'dict',
         'schema': {
@@ -112,6 +126,13 @@ schema = {
                 'required': False,
                 'default': 0
             }
+        }
+    },
+    'packs': {
+        'type': 'list',
+        'schema': {
+            'type': 'string',
+            'allowed': ['tutorial-server']
         }
     }
 }

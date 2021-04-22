@@ -11,7 +11,7 @@ RUN pip install --no-cache jhsingle-native-proxy
 
 {% block application %}
 {{ super() }}
-COPY build/start-web-app.sh /usr/bin/start.sh
+COPY ou-builder-build/start-web-app.sh /usr/bin/start.sh
 RUN chmod a+x /usr/bin/start.sh
 {% endblock %}
 

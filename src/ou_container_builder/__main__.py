@@ -45,6 +45,18 @@ def main(context, build, clean, tag):
             shutil.rmtree(os.path.join(context, 'ou-builder-build'))
         os.makedirs(os.path.join(context, 'ou-builder-build'))
 
+        if 'packs' in settings and settings['packs']:
+            if 'tutorial-server' in settings['packs']:
+                if 'packages' not in settings:
+                    settings['packages'] = {'pip': ['tutorial-server>=0.6.0']}
+                elif 'pip' not in settings['packages']:
+                    settings['packages']['pip'] = ['tutorial-server>=0.6.0']
+                else:
+                    settings['packages']['pip'].append('tutorial-server>=0.6.0')
+            with open(os.path.join(context, 'ou-builder-build', 'tutorial-server.ini'), 'w') as out_f:
+                tmpl = env.get_template('tutorial-server.ini')
+                out_f.write(tmpl.render(**settings))
+
         if settings['type'] == 'jupyter-notebook':
             jupyter_notebook.generate(context, env, settings)
         elif settings['type'] == 'web-app':
@@ -56,7 +68,7 @@ def main(context, build, clean, tag):
                 out_f.write(tmpl.render(**settings))
 
         if build:
-            cmd = ['docker', 'ou-builder-build', context]
+            cmd = ['docker', 'build', context]
             if tag:
                 for t in tag:
                     cmd.append('--tag')

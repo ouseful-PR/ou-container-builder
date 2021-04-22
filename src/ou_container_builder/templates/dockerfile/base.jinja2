@@ -20,47 +20,59 @@ RUN apt-get update -y && \
     apt-get install -y tini{% if sources and sources.apt %} curl gnupg{% endif %}{% if content%} git{% endif%}
 
 {% block apt_sources %}
-{% if sources and sources.apt %}
-{% for source in sources.apt %}
+  {% if sources and sources.apt %}
+    {% for source in sources.apt %}
 RUN curl -fsSL "{{ source.key }}" | apt-key --keyring "/etc/apt/trusted.gpg.d/{{ source.name }}.gpg" add - && \
     echo "{{ source.deb }}" > "/etc/apt/sources.list.d/{{ source.name }}.list"
-{% endfor %}
+    {% endfor %}
 RUN apt-get update -y && \
     apt-get dist-upgrade -y
-{% endif %}
+  {% endif %}
 {% endblock %}
 
 {% block apt %}
-{% if packages and packages.apt %}
+  {% if packages and packages.apt %}
 RUN apt install -y {{ ' '.join(packages.apt) }}
-{% endif %}
+  {% endif %}
 {% endblock %}
 
-{% block pip %}{% endblock %}
+{% block pip %}
+  {% if packages and packages.pip %}
+RUN pip install --no-cache {{ ' '.join(packages.pip)}}
+  {% endif %}
+{% endblock %}
+
+{% if packs %}
+  {% block packs %}
+    {% if 'tutorial-server' in packs %}
+COPY ou-builder-build/tutorial-server.ini /etc/tutorial-server/production.ini
+    {% endif %}
+  {% endblock %}
+{% endif %}
 
 {% if content %}
-{% block content_setup %}
+  {% block content_setup %}
 RUN mkdir -p /etc/module-content/data && \
     pip install --no-cache git+https://github.com/mmh352/ou-container-content.git
-COPY build/content_config.yaml /etc/module-content/config.yaml
-{% for part in content %}
-{% if part.target.startswith('/') %}
+COPY ou-builder-build/content_config.yaml /etc/module-content/config.yaml
+    {% for part in content %}
+      {% if part.target.startswith('/') %}
 COPY {{ part.source }} {{ part.target }}
-{% else %}
+      {% else %}
 COPY {{ part.source }} /etc/module-content/data/{{ part.target }}
-{% endif %}
-{% endfor %}
-{% endblock %}
+      {% endif %}
+    {% endfor %}
+  {% endblock %}
 {% endif %}
 
 {% block scripts %}
-{% if scripts %}
-{% for script in scripts %}
-{% if script.inline %}
+  {% if scripts %}
+    {% for script in scripts %}
+      {% if script.inline %}
 RUN {{ ' && \\\n    '.join(script.inline) }}
-{% endif %}
-{% endfor %}
-{% endif %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
 {% endblock %}
 
 {% block application %}{% endblock %}
