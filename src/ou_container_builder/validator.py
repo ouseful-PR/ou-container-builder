@@ -151,6 +151,10 @@ schema = {
                             'type': 'string',
                             'required': True,
                             'allowed': ['tutorial', 'workspace']
+                        },
+                        'path': {
+                            'type': 'string',
+                            'required': True
                         }
                     }
                 }
