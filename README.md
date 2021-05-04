@@ -17,6 +17,12 @@ Then, to install the OU Container Builder run
 pipx install git+https://github.com/mmh352/ou-container-builder.git
 ```
 
+To upgrade to the latest version, run:
+
+```
+pipx upgrade ou-container-builder
+```
+
 You can then run the OU Container Builder using the following command:
 
 ```
