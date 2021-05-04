@@ -109,22 +109,42 @@ schema = {
         'type': 'dict',
         'schema': {
             'default_url': {
-                'type': 'string'
+                'type': 'string',
+                'empty': False
             }
         }
     },
-    'web_app': {
-        'type': 'dict',
+    'web_apps': {
+        'type': 'list',
         'schema': {
-            'cmdline': {
-                'type': 'string',
-                'required': True,
-                'empty': False
-            },
-            'port': {
-                'type': 'integer',
-                'required': False,
-                'default': 0
+            'type': 'dict',
+            'schema': {
+                'path': {
+                    'type': 'string',
+                    'required': True,
+                    'empty': False
+                },
+                'cmdline': {
+                    'type': 'list',
+                    'required': True,
+                    'empty': False,
+                    'schema': {
+                        'type': 'string',
+                        'required': True,
+                        'empty': False
+                    }
+                },
+                'port': {
+                    'type': 'integer',
+                    'default': 0
+                },
+                'default': {
+                    'type': 'boolean',
+                    'default': False
+                },
+                'timeout': {
+                    'type': 'integer'
+                }
             }
         }
     },
@@ -146,6 +166,7 @@ schema = {
                         'name': {
                             'type': 'string',
                             'required': True,
+                            'empty': False,
                         },
                         'type': {
                             'type': 'string',
@@ -161,8 +182,18 @@ schema = {
             },
             'default': {
                 'type': 'string',
-                'required': True
+                'required': True,
+                'empty': False
             }
+        }
+    },
+    'hacks': {
+        'type': 'list',
+        'schema': {
+            'type': 'string',
+            'required': True,
+            'empty': False,
+            'allowed': ['missing-man1']
         }
     }
 }

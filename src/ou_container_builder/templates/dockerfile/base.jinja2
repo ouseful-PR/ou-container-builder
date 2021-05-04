@@ -19,6 +19,12 @@ RUN mkdir /home/$USER && \
 RUN apt-get update -y && \
     apt-get install -y tini{% if sources and sources.apt %} curl gnupg{% endif %}{% if content%} git{% endif%}
 
+{% if hacks %}
+  {% if 'missing-man1' in hacks %}
+RUN mkdir -p /usr/share/man/man1
+  {% endif %}
+{% endif %}
+
 {% block apt_sources %}
   {% if sources and sources.apt %}
     {% for source in sources.apt %}

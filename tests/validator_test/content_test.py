@@ -1,4 +1,4 @@
-"""Tests for the ou_container_builder.validator module."""
+"""Tests for the content section of the ou_container_builder.validator module."""
 from copy import deepcopy
 
 from ou_container_builder.validator import validate_settings
@@ -11,87 +11,6 @@ REQUIRED_SETTINGS = {
     },
     'type': 'jupyter-notebook'
 }
-
-
-def test_required_config():
-    """Test the minimal required configuration."""
-    settings = deepcopy(REQUIRED_SETTINGS)
-
-    assert isinstance(validate_settings(settings), dict) is True
-
-
-def test_missing_module_config():
-    """Test that a missing module setting fails."""
-    settings = deepcopy(REQUIRED_SETTINGS)
-    del settings['module']
-
-    errors = validate_settings(settings)
-
-    assert isinstance(errors, list) is True
-    assert len(errors) == 1
-    assert errors[0] == 'module: required field'
-
-
-def test_missing_module_code_config():
-    """Test that a missing module.code setting fails."""
-    settings = deepcopy(REQUIRED_SETTINGS)
-    del settings['module']['code']
-
-    errors = validate_settings(settings)
-
-    assert isinstance(errors, list) is True
-    assert len(errors) == 1
-    assert errors[0] == 'module.code: required field'
-
-
-def test_missing_module_presentation_config():
-    """Test that a missing module.presentation setting fails."""
-    settings = deepcopy(REQUIRED_SETTINGS)
-    del settings['module']['presentation']
-
-    errors = validate_settings(settings)
-
-    assert isinstance(errors, list) is True
-    assert len(errors) == 1
-    assert errors[0] == 'module.presentation: required field'
-
-
-def test_multiple_errors_config():
-    """Test that multiple missing fields produce multiple errors."""
-    settings = deepcopy(REQUIRED_SETTINGS)
-    del settings['module']['code']
-    del settings['module']['presentation']
-
-    errors = validate_settings(settings)
-
-    assert isinstance(errors, list) is True
-    assert len(errors) == 2
-    assert errors[0] == 'module.code: required field'
-    assert errors[1] == 'module.presentation: required field'
-
-
-def test_missing_type_config():
-    """Test that a missing type setting fails."""
-    settings = deepcopy(REQUIRED_SETTINGS)
-    del settings['type']
-
-    errors = validate_settings(settings)
-
-    assert isinstance(errors, list) is True
-    assert len(errors) == 1
-    assert errors[0] == 'type: required field'
-
-
-def test_invalid_type_config():
-    """Test that an invalid type setting fails."""
-    settings = deepcopy(REQUIRED_SETTINGS)
-    settings['type'] = 'invalid'
-
-    errors = validate_settings(settings)
-
-    assert isinstance(errors, list) is True
-    assert len(errors) == 1
-    assert errors[0] == 'type: unallowed value invalid'
 
 
 def test_optional_content_config():

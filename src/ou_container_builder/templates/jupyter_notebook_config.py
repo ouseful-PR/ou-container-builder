@@ -18,3 +18,19 @@ c.ServerProxy.servers = {
     }
 }
 {% endif %}
+
+{% if web_apps %}
+c.ServerProxy.servers = {
+    {% for app in web_apps %}
+    '{{ app.path }}': {
+        'command': {{ app.cmdline }},
+        {% if app.port %}
+        'port': app.port,
+        {% endif %}
+        {% if app.timeout %}
+        'timeout': {{ app.timeout }},
+        {% endif %}
+    },
+    {% endfor %}
+}
+{% endif %}

@@ -45,6 +45,7 @@ def main(context, build, clean, tag):
             shutil.rmtree(os.path.join(context, 'ou-builder-build'))
         os.makedirs(os.path.join(context, 'ou-builder-build'))
 
+        # Handle packs
         if 'packs' in settings and settings['packs']:
             if 'tutorial-server' in settings['packs']:
                 if 'packages' not in settings:
@@ -56,6 +57,15 @@ def main(context, build, clean, tag):
             with open(os.path.join(context, 'ou-builder-build', 'tutorial-server.ini'), 'w') as out_f:
                 tmpl = env.get_template('tutorial-server.ini')
                 out_f.write(tmpl.render(**settings))
+
+        # Handle automatic hacks
+        if 'packages' in settings and 'apt' in settings['packages']:
+            if 'openjdk-11-jdk' in settings['packages']['apt']:
+                if 'hacks' in settings:
+                    if 'missing-man1' not in settings['hacks']:
+                        settings['hacks'].append('missing-man1')
+                else:
+                    settings['hacks'] = ['missing-man1']
 
         if settings['type'] == 'jupyter-notebook':
             jupyter_notebook.generate(context, env, settings)
