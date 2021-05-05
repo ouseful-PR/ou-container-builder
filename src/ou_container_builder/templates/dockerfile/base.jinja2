@@ -40,6 +40,7 @@ RUN mkdir -p /usr/share/man/man1
 
 {% block apt_sources %}
   {% if sources and sources.apt %}
+# Apt source definitions
     {% for source in sources.apt %}
 RUN curl -fsSL "{{ source.key }}" | apt-key --keyring "/etc/apt/trusted.gpg.d/{{ source.name }}.gpg" add - && \
     echo "{{ source.deb }}" > "/etc/apt/sources.list.d/{{ source.name }}.list"
@@ -60,6 +61,7 @@ RUN apt install -y \
 
 {% block pip %}
   {% if packages and packages.pip %}
+# Python (pip) package installation
 RUN pip install --no-cache {{ ' '.join(packages.pip)}}
   {% endif %}
 {% endblock %}
@@ -100,13 +102,18 @@ RUN {{ ' && \\\n    '.join(script.inline) }}
 {% block application %}{% endblock %}
 
 {% block set_permissions %}
+# Check permissions
 RUN chown -R $USER:$GID $HOME
 {% endblock %}
 
+# Reset user
 USER $USER
 
 {% block runtime_environment %}
+# Reset home
 WORKDIR $HOME
+
+# Initialise container
 ENTRYPOINT ["tini", "-g", "--"]
 {% endblock %}
 
