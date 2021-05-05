@@ -11,6 +11,9 @@ ENV GID="100"
 ENV MODULE_CODE="{{ module.code }}"
 ENV MODULE_PRESENTATION="{{ module.presentation }}"
 ENV HOME="/home/$USER/$MODULE_CODE-$MODULE_PRESENTATION"
+
+# Just in case something needs it, conform to Jupyter convention
+ENV NB_USER=${USER}
 {% endblock %}
 
 USER root
