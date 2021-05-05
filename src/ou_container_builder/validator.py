@@ -23,6 +23,11 @@ schema = {
         'required': False,
         'default': ''
     },
+    'description': {
+        'type': 'string',
+        'required': False,
+        'default': ''
+    },
     'type': {
         'type': 'string',
         'required': True,
