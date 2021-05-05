@@ -28,6 +28,11 @@ schema = {
         'required': False,
         'default': ''
     },
+    'user': {
+        'type': 'string',
+        'required': False,
+        'default': 'ou-user'
+    },
     'type': {
         'type': 'string',
         'required': True,
