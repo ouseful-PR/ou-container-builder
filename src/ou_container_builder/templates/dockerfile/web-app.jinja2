@@ -6,7 +6,7 @@ FROM python:3.9-slim-buster
 
 {% block pip%}
 {{ super() }}
-RUN pip install --no-cache jupyter-server-proxy jupyterhub==1.3.0
+RUN pip install --no-cache-dir jupyter-server-proxy jupyterhub==1.3.0
 {% endblock %}
 
 {% block application %}

@@ -38,13 +38,13 @@ RUN apt-get update -y && \
 
 {% block apt %}
   {% if packages and packages.apt %}
-RUN apt install -y {{ ' '.join(packages.apt) }}
+RUN apt-get install -y {{ ' '.join(packages.apt) }}
   {% endif %}
 {% endblock %}
 
 {% block pip %}
   {% if packages and packages.pip %}
-RUN pip install --no-cache {{ ' '.join(packages.pip)}}
+RUN pip install --no-cache-dir {{ ' '.join(packages.pip)}}
   {% endif %}
 {% endblock %}
 
