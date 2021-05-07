@@ -1,8 +1,8 @@
 # OU Container Builder
 
-Documentation for the OU Container Builder can be found here: https://mmh352.github.io/ou-container-builder/
+Documentation for the OU Container Builder can be found here: https://ou-container-builder.readthedocs.io
 
-![Validation Status](https://github.com/mmh352/ou-container-builder/workflows/Validation/badge.svg) ![Tests](https://github.com/mmh352/ou-container-builder/workflows/Tests/badge.svg)
+![Validation Status](https://github.com/mmh352/ou-container-builder/workflows/Validation/badge.svg) ![Tests](https://github.com/mmh352/ou-container-builder/workflows/Tests/badge.svg) ![Documentation](https://readthedocs.org/projects/ou-container-builder/badge/?version=latest)
 
 # Install and Run
 
