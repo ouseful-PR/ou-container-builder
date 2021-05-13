@@ -21,6 +21,6 @@ web_apps:
       - -p
       - "{port}"
       - -d
-      - /home/ou-user/OpenRefine
+      - /home/ou-user/OpenRefine-21J
     timeout: 120
     default: true

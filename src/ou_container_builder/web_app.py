@@ -1,11 +1,11 @@
-"""Build containers housing a single web application."""
+"""Build containers housing one or more web applications."""
 import os
 
 from jinja2 import Environment
 
 
 def generate(context: str, env: Environment, settings: dict):
-    """Generate the Dockerfile for a single web application.
+    """Generate the Dockerfile for one or more web applications.
 
     :param context: The context path within which the generation is running
     :type context: str

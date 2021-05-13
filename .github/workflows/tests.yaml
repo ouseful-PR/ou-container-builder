@@ -49,9 +49,8 @@ jobs:
 
     - name: Test Docs Build
       run: |
-        cd documentation
-        poetry run make clean
-        poetry run make build
+        cd docs
+        poetry run make html
 
   demo_tests:
     runs-on: ubuntu-20.04

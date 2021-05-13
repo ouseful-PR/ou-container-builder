@@ -8,3 +8,4 @@ The API documentation is primarily meant for developers.
 
     jupyter_notebook
     validator
+    web_app
