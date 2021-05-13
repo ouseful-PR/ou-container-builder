@@ -49,11 +49,11 @@ def main(context, build, clean, tag):
         if 'packs' in settings and settings['packs']:
             if 'tutorial-server' in settings['packs']:
                 if 'packages' not in settings:
-                    settings['packages'] = {'pip': ['tutorial-server>=0.6.0']}
+                    settings['packages'] = {'pip': ['tutorial-server>=0.7.0']}
                 elif 'pip' not in settings['packages']:
-                    settings['packages']['pip'] = ['tutorial-server>=0.6.0']
+                    settings['packages']['pip'] = ['tutorial-server>=0.7.0']
                 else:
-                    settings['packages']['pip'].append('tutorial-server>=0.6.0')
+                    settings['packages']['pip'].append('tutorial-server>=0.7.0')
             with open(os.path.join(context, 'ou-builder-build', 'tutorial-server.ini'), 'w') as out_f:
                 tmpl = env.get_template('tutorial-server.ini')
                 out_f.write(tmpl.render(**settings))
