@@ -18,6 +18,16 @@ schema = {
             }
         }
     },
+    'image': {
+        'type': 'dict',
+        'required': False,
+        'schema': {
+            'org': {
+                'type': 'string',
+                'default': 'mmh352'
+            }
+        }
+    },
     'title': {
         'type': 'string',
         'required': False,
