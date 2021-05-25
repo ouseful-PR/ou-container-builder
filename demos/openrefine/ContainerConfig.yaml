@@ -1,6 +1,9 @@
+user: jovyan
 module:
   code: OpenRefine
   presentation: 21J
+title: OpenRefine standalaone app container
+description: For use originally in TM351
 type: web-app
 packages:
   apt:
