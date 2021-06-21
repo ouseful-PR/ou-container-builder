@@ -1,5 +1,5 @@
 c.NotebookApp.ip = '0.0.0.0'
-c.NotebookApp.notebook_dir = '/home/ou-user/{{ module.code }}-{{ module.presentation }}'
+c.NotebookApp.notebook_dir = '/home/ou/{{ module.code }}-{{ module.presentation }}'
 c.NotebookApp.open_browser = False
 c.NotebookApp.quit_button = False
 c.JupyterHub.shutdown_on_logout

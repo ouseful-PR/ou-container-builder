@@ -1,7 +1,7 @@
 {% block from %}{% endblock %}
 
 {% block environment %}
-ENV USER="ou-user"
+ENV USER="ou"
 ENV UID="1000"
 ENV GID="100"
 ENV MODULE_CODE="{{ module.code }}"
@@ -38,7 +38,7 @@ RUN apt-get update -y && \
 
 {% block apt %}
   {% if packages and packages.apt %}
-RUN apt-get install -y {{ ' '.join(packages.apt) }}
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y {{ ' '.join(packages.apt) }}
   {% endif %}
 {% endblock %}
 
@@ -53,27 +53,38 @@ RUN pip install --no-cache-dir {{ ' '.join(packages.pip)}}
     {% if 'tutorial-server' in packs %}
 COPY ou-builder-build/tutorial-server.ini /etc/tutorial-server/production.ini
     {% endif %}
+    {% if 'mariadb' in packs %}
+COPY ou-builder-build/mariadb-setup.sh /usr/bin/mariadb-setup.sh
+RUN chmod a+x /usr/bin/mariadb-setup.sh && \
+    printf "ou ALL=NOPASSWD: /usr/bin/mariadb-setup.sh\nou ALL=NOPASSWD: /usr/sbin/service mysql start\nou ALL=NOPASSWD: /usr/sbin/service mysql stop\n" > /etc/sudoers.d/99-mariadb
+    {% endif %}
   {% endblock %}
 {% endif %}
 
-{% if content %}
+{% if content or (scripts and scripts.startup) or services %}
   {% block content_setup %}
 RUN mkdir -p /etc/module-content/data && \
     pip install --no-cache git+https://github.com/mmh352/ou-container-content.git
 COPY ou-builder-build/content_config.yaml /etc/module-content/config.yaml
-    {% for part in content %}
-      {% if part.target.startswith('/') %}
+    {% if content %}
+      {% for part in content %}
+        {% if part.source.startswith('/') %}
+RUN cp -r {{ part.source }} /etc/module-content/data/{{ part.target }}
+        {% else %}
+          {% if part.target.startswith('/') %}
 COPY {{ part.source }} {{ part.target }}
-      {% else %}
+          {% else %}
 COPY {{ part.source }} /etc/module-content/data/{{ part.target }}
-      {% endif %}
-    {% endfor %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
   {% endblock %}
 {% endif %}
 
 {% block scripts %}
-  {% if scripts %}
-    {% for script in scripts %}
+  {% if scripts and scripts.build %}
+    {% for script in scripts.build %}
       {% if script.inline %}
 RUN {{ ' && \\\n    '.join(script.inline) }}
       {% endif %}
@@ -84,7 +95,7 @@ RUN {{ ' && \\\n    '.join(script.inline) }}
 {% block application %}{% endblock %}
 
 {% block set_permissions %}
-RUN chown -R $USER:$GID $HOME
+RUN chown -R $USER:$GID $HOME /etc/module-content
 {% endblock %}
 
 USER $USER

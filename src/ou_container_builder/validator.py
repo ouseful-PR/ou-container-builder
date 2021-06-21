@@ -92,14 +92,30 @@ schema = {
         }
     },
     'scripts': {
-        'type': 'list',
+        'type': 'dict',
         'schema': {
-            'type': 'dict',
-            'schema': {
-                'inline': {
-                    'type': 'list',
+            'build': {
+                'type': 'list',
+                'schema': {
+                    'type': 'dict',
                     'schema': {
-                        'type': 'string'
+                        'inline': {
+                            'type': 'list',
+                            'schema': {
+                                'type': 'string'
+                            }
+                        }
+                    }
+                }
+            },
+            'startup': {
+                'type': 'list',
+                'schema': {
+                    'type': 'dict',
+                    'schema': {
+                        'cmd': {
+                            'type': 'string'
+                        }
                     }
                 }
             }
@@ -148,11 +164,18 @@ schema = {
             }
         }
     },
+    'services': {
+        'type': 'list',
+        'schema': {
+            'type': 'string',
+            'empty': False
+        }
+    },
     'packs': {
         'type': 'list',
         'schema': {
             'type': 'string',
-            'allowed': ['tutorial-server']
+            'allowed': ['tutorial-server', 'tutorial-server-php', 'mariadb']
         }
     },
     'tutorial_server': {
@@ -171,7 +194,7 @@ schema = {
                         'type': {
                             'type': 'string',
                             'required': True,
-                            'allowed': ['tutorial', 'workspace']
+                            'allowed': ['tutorial', 'workspace', 'live']
                         },
                         'path': {
                             'type': 'string',
@@ -184,6 +207,26 @@ schema = {
                 'type': 'string',
                 'required': True,
                 'empty': False
+            }
+        }
+    },
+    'mariadb': {
+        'type': 'dict',
+        'schema': {
+            'database': {
+                'type': 'string',
+                'required': True,
+                'empty': False,
+            },
+            'username': {
+                'type': 'string',
+                'required': True,
+                'empty': False,
+            },
+            'password': {
+                'type': 'string',
+                'required': True,
+                'empty': False,
             }
         }
     },
