@@ -15,28 +15,8 @@ from . import generators, packs
 from .validator import validate_settings
 
 
-@click.command()
-@click.option('-c', '--context',
-              default='.',
-              help='Context within which the container will be built',
-              show_default=True)
-@click.option('-b/-nb', '--build/--no-build',
-              default=True,
-              help='Automatically build the container',
-              show_default=True)
-@click.option('--clean/--no-clean',
-              default=True,
-              help='Automatically clean up after building the container',
-              show_default=True)
-@click.option('--tag',
-              multiple=True,
-              help='Automatically tag the generated image')
-def main(context, build, clean, tag):
-    """Build your OU Container."""
-    with open(os.path.join(context, 'ContainerConfig.yaml')) as config_f:
-        settings = load(config_f, Loader=Loader)
-    settings = validate_settings(settings)
-
+def run_build(settings: dict, context: str, build: bool, clean: bool, tag: list[str]) -> list:
+    """Run the build process."""
     if isinstance(settings, dict):
         env = Environment(loader=PackageLoader('ou_container_builder', 'templates'),
                           autoescape=False)
@@ -98,12 +78,36 @@ def main(context, build, clean, tag):
                     os.unlink(os.path.join(context, 'Dockerfile'))
                     if os.path.exists(os.path.join(context, 'ou-builder-build')):
                         shutil.rmtree(os.path.join(context, 'ou-builder-build'))
+            return []
         else:
-            click.echo(click.style('There are errors in your configuration settings:', fg='red'), err=True)
-            click.echo(err=True)
-            for error in settings:
-                click.echo(error, err=True)
+            return settings
     else:
+        return settings
+
+
+@click.command()
+@click.option('-c', '--context',
+              default='.',
+              help='Context within which the container will be built',
+              show_default=True)
+@click.option('-b/-nb', '--build/--no-build',
+              default=True,
+              help='Automatically build the container',
+              show_default=True)
+@click.option('--clean/--no-clean',
+              default=True,
+              help='Automatically clean up after building the container',
+              show_default=True)
+@click.option('--tag',
+              multiple=True,
+              help='Automatically tag the generated image')
+def main(context: str, build: bool, clean: bool, tag: list[str]):
+    """Build your OU Container."""
+    with open(os.path.join(context, 'ContainerConfig.yaml')) as config_f:
+        settings = load(config_f, Loader=Loader)
+    settings = validate_settings(settings)
+    result = run_build(settings, context, build, clean, tag)
+    if result:
         click.echo(click.style('There are errors in your configuration settings:', fg='red'), err=True)
         click.echo(err=True)
         for error in settings:
