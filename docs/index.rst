@@ -15,7 +15,7 @@ via JupyterHub or for local use with Docker.
 
    installation
    building
-   configuration
+   configuration/index
    api/index
 
 

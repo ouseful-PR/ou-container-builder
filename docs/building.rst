@@ -15,9 +15,5 @@ The ``ou-container-builder`` supports a range of command-line switches to config
 * ``--help``: Show all available command-line switches.
 * ``-nb``, ``--no-build``: Generate the Dockerfile, but do not build it. This implies ``--no-clean``.
 * ``--no-clean``: Do not clean the temporary files generated for the Docker build.
-* ``--tag {TAG}``: Tag the resulting Docker image. The full tag that is passed to Docker is ``mmh352/CODE-PRESENTATION:TAG``,
-  where ``CODE`` and ``PRESENTATION`` are taken from the ``ContainerConfig.yaml``.
-
-.. note::
-
-    The Docker image tag currently has a hard-coded account part. This will in future be updated to use the OU Docker repository.
+* ``--tag {TAG}``: Tag the resulting Docker image with the given ``TAG``. This option can be provided multiple times
+  to attach multiple tags.
