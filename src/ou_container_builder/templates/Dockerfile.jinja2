@@ -18,8 +18,8 @@ RUN mkdir /home/$USER && \
     useradd -u $UID -g $GID -d $HOME -m $USER
 {% endblock %}
 
-RUN apt-get update -y && \
-    apt-get install -y tini{% if sources and sources.apt %} curl gnupg{% endif %}
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y tini{% if sources and sources.apt %} curl gnupg{% endif %}
 
 {% block hacks %}
   {% if hacks %}

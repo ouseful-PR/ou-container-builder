@@ -36,6 +36,7 @@ def run_build(settings: dict, context: str, build: bool, clean: bool, tag: list[
     :return: A list with any errors that occured during processing
     :rtype: list
     """
+    settings = validate_settings(settings)
     if isinstance(settings, dict):
         env = Environment(loader=PackageLoader('ou_container_builder', 'templates'),
                           autoescape=False)
@@ -124,7 +125,6 @@ def main(context: str, build: bool, clean: bool, tag: list[str]):
     """Build your OU Container."""
     with open(os.path.join(context, 'ContainerConfig.yaml')) as config_f:
         settings = load(config_f, Loader=Loader)
-    settings = validate_settings(settings)
     result = run_build(settings, context, build, clean, tag)
     if result:
         click.echo(click.style('There are errors in your configuration settings:', fg='red'), err=True)
