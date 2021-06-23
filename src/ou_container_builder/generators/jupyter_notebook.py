@@ -47,13 +47,13 @@ def generate(context: str, env: Environment, settings: dict):
     })
 
     with open(os.path.join(context, 'ou-builder-build', 'jupyter_notebook_config.py'), 'w') as out_f:
-        tmpl = env.get_template('jupyter_notebook_config.py')
+        tmpl = env.get_template('generators/jupyter_notebook/jupyter_notebook_config.py')
         out_f.write(tmpl.render(**settings))
 
     with open(os.path.join(context, 'ou-builder-build', 'start-notebook.sh'), 'w') as out_f:
-        tmpl = env.get_template('start-notebook.sh')
+        tmpl = env.get_template('generators/jupyter_notebook/start.sh')
         out_f.write(tmpl.render(**settings))
 
     with open(os.path.join(context, 'Dockerfile'), 'w') as out_f:
-        tmpl = env.get_template('dockerfile/base.jinja2')
+        tmpl = env.get_template('Dockerfile.jinja2')
         out_f.write(tmpl.render(**settings))
