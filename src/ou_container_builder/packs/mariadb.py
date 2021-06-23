@@ -18,7 +18,7 @@ def apply_pack(settings, env, context):
                         'sed -e "s#datadir.*=.*#datadir = $HOME/mariadb#" -e "s#user.*=.*#user = ou#" -i /etc/mysql/mariadb.conf.d/50-server.cnf',  # noqa: E501
                         'chown ou: /var/log/mysql/error.log /run/mysqld',
                         'chmod a+x /usr/bin/mariadb-setup.sh',
-                        'printf "ou ALL=NOPASSWD: /usr/bin/mariadb-setup.sh\\nou ALL=NOPASSWD: /usr/sbin/service mysql start\\nou ALL=NOPASSWD: /usr/sbin/service mysql stop\\n" > /etc/sudoers.d/99-mariadb'  # noqa: E501
+                        'printf "ou ALL=NOPASSWD: /usr/bin/mariadb-setup.sh\\n" > /etc/sudoers.d/99-mariadb'  # noqa: E501
                     ]
                 },
             ],
@@ -45,6 +45,6 @@ def apply_pack(settings, env, context):
         ]
     })
     with open(os.path.join(context, 'ou-builder-build', 'mariadb-setup.sh'), 'w') as out_f:
-        tmpl = env.get_template('mariadb-setup.sh')
+        tmpl = env.get_template('packs/mariadb/setup.sh')
         out_f.write(tmpl.render(**settings))
     return settings

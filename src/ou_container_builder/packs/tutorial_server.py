@@ -26,6 +26,6 @@ def apply_pack(settings, env, context):
     settings = merge_settings(settings, additional_settings)
     # Generate the config file
     with open(os.path.join(context, 'ou-builder-build', 'tutorial-server.ini'), 'w') as out_f:
-        tmpl = env.get_template('tutorial-server.ini')
+        tmpl = env.get_template('packs/tutorial-server/production.ini')
         out_f.write(tmpl.render(**settings))
     return settings

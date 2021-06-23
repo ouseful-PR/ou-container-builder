@@ -51,6 +51,8 @@ def main(context, build, clean, tag):
                 settings = packs.tutorial_server(settings, env, context)
             if 'mariadb' in settings['packs']:
                 settings = packs.mariadb(settings, env, context)
+        if 'services' in settings:
+            settings = packs.services(settings, env, context)
 
         # Handle automatic hacks
         if 'packages' in settings and 'apt' in settings['packages']:
