@@ -1,4 +1,6 @@
-{% block from %}{% endblock %}
+{% block from %}
+FROM python:3.9-slim-buster
+{% endblock %}
 
 {% block environment %}
 ENV USER="ou"
@@ -94,4 +96,10 @@ WORKDIR $HOME
 ENTRYPOINT ["tini", "-g", "--"]
 {% endblock %}
 
-{% block cmd %}{% endblock %}
+{% block expose %}
+EXPOSE 8888
+{% endblock %}
+
+{% block cmd %}
+CMD ["start.sh"]
+{% endblock %}

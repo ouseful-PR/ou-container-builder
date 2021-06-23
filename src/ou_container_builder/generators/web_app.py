@@ -3,6 +3,8 @@ import os
 
 from jinja2 import Environment
 
+from ..utils import merge_settings
+
 
 def generate(context: str, env: Environment, settings: dict):
     """Generate the Dockerfile for one or more web applications.
@@ -14,17 +16,35 @@ def generate(context: str, env: Environment, settings: dict):
     :param settings: The settings parsed from the configuration file
     :type settings: dict
     """
-    if 'packs' in settings and 'tutorial-server' in settings['packs']:
-        settings['web_app'] = {
-            'cmdline': 'python3 -m tutorial_server --config=/etc/tutorial-server/production.ini --port={port} ' +
-                       '--basepath=$JUPYTERHUB_SERVICE_PREFIX/',
-            'port': 0
+    settings = merge_settings(settings, {
+        'packages': {
+            'pip': [
+                'jupyter-server-proxy',
+                'jupyterhub==1.3.0'
+            ]
+        },
+        'content': [
+            {
+                'source': 'ou-builder-build/start-web-app.sh',
+                'target': '/usr/bin/start.sh',
+                'overwrite': 'always'
+            },
+            {
+                'source': 'ou-builder-build/jupyter_server_config.py',
+                'target': '/etc/jupyter/jupyter_server_config.py',
+                'overwrite': 'always'
+            }
+        ],
+        'scripts': {
+            'build': [
+                {
+                    'inline': [
+                        'chmod a+x /usr/bin/start.sh'
+                    ]
+                }
+            ]
         }
-
-    with open(os.path.join(context, 'Dockerfile'), 'w') as out_f:
-        if settings['type'] == 'web-app':
-            tmpl = env.get_template('dockerfile/web-app.jinja2')
-        out_f.write(tmpl.render(**settings))
+    })
 
     with open(os.path.join(context, 'ou-builder-build', 'start-web-app.sh'), 'w') as out_f:
         tmpl = env.get_template('start-web-app.sh')
@@ -32,4 +52,9 @@ def generate(context: str, env: Environment, settings: dict):
 
     with open(os.path.join(context, 'ou-builder-build', 'jupyter_server_config.py'), 'w') as out_f:
         tmpl = env.get_template('jupyter_server_config.py')
+        out_f.write(tmpl.render(**settings))
+
+    with open(os.path.join(context, 'Dockerfile'), 'w') as out_f:
+        if settings['type'] == 'web-app':
+            tmpl = env.get_template('dockerfile/base.jinja2')
         out_f.write(tmpl.render(**settings))

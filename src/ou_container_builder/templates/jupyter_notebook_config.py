@@ -10,15 +10,6 @@ c.MappingKernelManager.cull_interval = 10
 c.NotebookApp.default_url = '{{ jupyter_notebook['default_url'] }}'
 {% endif %}
 
-{% if packs and 'tutorial-server' in packs %}
-c.ServerProxy.servers = {
-    'tutorial-server': {
-        'command': [ 'python', '-m' 'tutorial_server', '--config=/etc/tutorial-server/production.ini', '--port={port}', '--basepath={base_url}tutorial-server/', ],
-        'absolute_url': True,
-    }
-}
-{% endif %}
-
 {% if web_apps %}
 c.ServerProxy.servers = {
     {% for app in web_apps %}
@@ -29,6 +20,9 @@ c.ServerProxy.servers = {
         {% endif %}
         {% if app.timeout %}
         'timeout': {{ app.timeout }},
+        {% endif %}
+        {% if app.absolute_url %}
+        'absolute_url': True,
         {% endif %}
     },
     {% endfor %}

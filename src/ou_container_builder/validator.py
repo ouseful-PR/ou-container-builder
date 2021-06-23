@@ -160,6 +160,10 @@ schema = {
                 },
                 'timeout': {
                     'type': 'integer'
+                },
+                'absolute_url': {
+                    'type': 'boolean',
+                    'default': False
                 }
             }
         }

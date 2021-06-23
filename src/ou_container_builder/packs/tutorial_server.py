@@ -19,6 +19,21 @@ def apply_pack(settings, env, context):
                 'target': '/etc/tutorial-server/production.ini',
                 'overwrite': 'always'
             }
+        ],
+        'web_apps': [
+            {
+                'path': 'tutorial-server',
+                'cmdline': [
+                    'python',
+                    '-m',
+                    'tutorial_server',
+                    '--config=/etc/tutorial-server/production.ini',
+                    '--port={port}',
+                    '--basepath={base_url}tutorial-server/'
+                ],
+                'absolute_url': True,
+                'default': True
+            }
         ]
     }
     if 'tutorial_server' in settings and settings['tutorial_server']['php-cgi']:
