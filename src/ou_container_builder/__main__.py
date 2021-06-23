@@ -18,7 +18,7 @@ from . import generators, packs
 from .validator import validate_settings
 
 
-def run_build(settings: dict, context: str, build: bool, clean: bool, tag: list[str]) -> list:
+def run_build(settings: dict, context: str, build: bool, clean: bool, tag: list) -> list:
     """Run the build process.
 
     This processes the ``settings``, generates the required files, and then runs the Docker build process.
@@ -121,7 +121,7 @@ def run_build(settings: dict, context: str, build: bool, clean: bool, tag: list[
 @click.option('--tag',
               multiple=True,
               help='Automatically tag the generated image')
-def main(context: str, build: bool, clean: bool, tag: list[str]):
+def main(context: str, build: bool, clean: bool, tag: list):
     """Build your OU Container."""
     with open(os.path.join(context, 'ContainerConfig.yaml')) as config_f:
         settings = load(config_f, Loader=Loader)
