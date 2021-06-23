@@ -10,7 +10,8 @@ def apply_pack(settings, env, context):
     additional_settings = {
         'packages': {
             'pip': [
-                'tutorial-server>=0.7.0'
+                'tutorial-server>=0.7.0',
+                'jupyter-server-proxy'
             ]
         },
         'content': [
