@@ -2,7 +2,7 @@
 
 set -e
 
-{% if content %}
+{% if flags and flags.ou_container_content %}
 ou-container-content
 {% endif %}
 

@@ -247,6 +247,15 @@ schema = {
             'empty': False,
             'allowed': ['missing-man1']
         }
+    },
+    'flags': {
+        'type': 'dict',
+        'schema': {
+            'ou_container_content': {
+                'type': 'boolean',
+                'default': False
+            }
+        }
     }
 }
 

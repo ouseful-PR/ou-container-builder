@@ -45,14 +45,23 @@ def main(context, build, clean, tag):
             shutil.rmtree(os.path.join(context, 'ou-builder-build'))
         os.makedirs(os.path.join(context, 'ou-builder-build'))
 
-        # Handle packs
+        # Handle optional packs
         if 'packs' in settings and settings['packs']:
             if 'tutorial-server' in settings['packs']:
                 settings = packs.tutorial_server(settings, env, context)
             if 'mariadb' in settings['packs']:
                 settings = packs.mariadb(settings, env, context)
+
+        # Setup the generators
+        if settings['type'] == 'jupyter-notebook':
+            settings = generators.jupyter_notebook.setup(context, env, settings)
+        elif settings['type'] == 'web-app':
+            settings = generators.web_app.setup(context, env, settings)
+
+        # Handle core packs
         if 'services' in settings:
             settings = packs.services(settings, env, context)
+        settings = packs.content(settings, env, context)
 
         # Handle automatic hacks
         if 'packages' in settings and 'apt' in settings['packages']:
@@ -72,19 +81,11 @@ def main(context, build, clean, tag):
                 if 'pip' in settings['packages']:
                     settings['packages']['pip'].sort()
 
-            # Generate the content distribution settings
-            if ('content' in settings and settings['content']) \
-                    or ('scripts' in settings and 'startup' in settings['scripts'] and settings['scripts']['startup']) \
-                    or ('services' in settings and settings['services']):
-                with open(os.path.join(context, 'ou-builder-build', 'content_config.yaml'), 'w') as out_f:
-                    tmpl = env.get_template('content_config.yaml')
-                    out_f.write(tmpl.render(**settings))
-
             # Generate the Dockerfiles
             if settings['type'] == 'jupyter-notebook':
-                generators.jupyter_notebook(context, env, settings)
+                generators.jupyter_notebook.generate(context, env, settings)
             elif settings['type'] == 'web-app':
-                generators.web_app(context, env, settings)
+                generators.web_app.generate(context, env, settings)
 
             if build:
                 cmd = ['docker', 'build', context]

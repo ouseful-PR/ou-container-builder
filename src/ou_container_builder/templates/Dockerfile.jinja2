@@ -19,7 +19,7 @@ RUN mkdir /home/$USER && \
 {% endblock %}
 
 RUN apt-get update -y && \
-    apt-get install -y tini{% if sources and sources.apt %} curl gnupg{% endif %}{% if content%} git{% endif%}
+    apt-get install -y tini{% if sources and sources.apt %} curl gnupg{% endif %}
 
 {% block hacks %}
   {% if hacks %}
@@ -52,15 +52,18 @@ RUN pip install --no-cache-dir {% for package in packages.pip %}"{{ package }}" 
   {% endif %}
 {% endblock %}
 
-{% if content or (scripts and scripts.startup) or services %}
-  {% block content_setup %}
-RUN mkdir -p /etc/module-content/data && \
-    pip install --no-cache git+https://github.com/mmh352/ou-container-content.git
+{% block content%}
+  {% if flags and flags.ou_container_content %}
+RUN mkdir -p /etc/module-content/data
 COPY ou-builder-build/content_config.yaml /etc/module-content/config.yaml
     {% if content %}
       {% for part in content %}
         {% if part.source.startswith('/') %}
+          {% if part.target.startswith('/') %}
+RUN cp -r {{ part.source }} {{ part.target }}
+          {% else %}
 RUN cp -r {{ part.source }} /etc/module-content/data/{{ part.target }}
+          {% endif %}
         {% else %}
           {% if part.target.startswith('/') %}
 COPY {{ part.source }} {{ part.target }}
@@ -70,8 +73,8 @@ COPY {{ part.source }} /etc/module-content/data/{{ part.target }}
         {% endif %}
       {% endfor %}
     {% endif %}
-  {% endblock %}
-{% endif %}
+  {% endif %}
+{% endblock %}
 
 {% block scripts %}
   {% if scripts and scripts.build %}
@@ -86,7 +89,7 @@ RUN {{ ' && \\\n    '.join(script.inline) }}
 {% block application %}{% endblock %}
 
 {% block set_permissions %}
-RUN chown -R $USER:$GID $HOME /etc/module-content
+RUN chown -R $USER:$GID $HOME {% if flags and flags.ou_container_content %}/etc/module-content{% endif %}
 {% endblock %}
 
 USER $USER

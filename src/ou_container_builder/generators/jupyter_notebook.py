@@ -6,16 +6,8 @@ from jinja2 import Environment
 from ou_container_builder.utils import merge_settings
 
 
-def generate(context: str, env: Environment, settings: dict):
-    """Generate the Dockerfile for a Jupyter Notebook container.
-
-    :param context: The context path within which the generation is running
-    :type context: str
-    :param env: The Jinja2 environment to use for loading and rendering templates
-    :type env: :class:`~jinja2.environment.Environment`
-    :param settings: The settings parsed from the configuration file
-    :type settings: dict
-    """
+def setup(context: str, env: Environment, settings: dict):
+    """Run the setup for the Jupyter Notebook generator."""
     settings = merge_settings(settings, {
         'packages': {
             'pip': [
@@ -45,7 +37,19 @@ def generate(context: str, env: Environment, settings: dict):
             ]
         }
     })
+    return settings
 
+
+def generate(context: str, env: Environment, settings: dict):
+    """Generate the Dockerfile for a Jupyter Notebook container.
+
+    :param context: The context path within which the generation is running
+    :type context: str
+    :param env: The Jinja2 environment to use for loading and rendering templates
+    :type env: :class:`~jinja2.environment.Environment`
+    :param settings: The settings parsed from the configuration file
+    :type settings: dict
+    """
     with open(os.path.join(context, 'ou-builder-build', 'jupyter_notebook_config.py'), 'w') as out_f:
         tmpl = env.get_template('generators/jupyter_notebook/jupyter_notebook_config.py')
         out_f.write(tmpl.render(**settings))
