@@ -6,9 +6,20 @@ from jinja2 import Environment
 from ..utils import merge_settings
 
 
-def apply_pack(context: str, env: Environment, settings: dict):
-    """Apply the tutorial-server pack."""
-    # Extend the settings
+def apply_pack(context: str, env: Environment, settings: dict) -> dict:
+    """Apply the tutorial-server pack.
+
+    Ensures that the Tutorial Server is installed and set up via the ``web_apps`` setting.
+
+    :param context: The context path within which the generation is running
+    :type context: str
+    :param env: The Jinja2 environment to use for loading and rendering templates
+    :type env: :class:`~jinja2.environment.Environment`
+    :param settings: The settings parsed from the configuration file
+    :type settings: dict
+    :return: The updated settings
+    :rtype: dict
+    """
     additional_settings = {
         'packages': {
             'pip': [
@@ -42,7 +53,7 @@ def apply_pack(context: str, env: Environment, settings: dict):
     if 'tutorial_server' in settings and settings['tutorial_server']['php-cgi']:
         additional_settings['packages']['apt'] = ['php-cgi']
     settings = merge_settings(settings, additional_settings)
-    # Generate the config file
+
     with open(os.path.join(context, 'ou-builder-build', 'tutorial-server.ini'), 'w') as out_f:
         tmpl = env.get_template('packs/tutorial-server/production.ini')
         out_f.write(tmpl.render(**settings))

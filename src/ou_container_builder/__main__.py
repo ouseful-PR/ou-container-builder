@@ -1,4 +1,7 @@
-"""The main OU Container Builder commandline application."""
+"""The main OU Container Builder commandline application.
+
+Run ``ou-container-builder --help`` for help with the command-line parameters.
+"""
 import click
 import os
 import shutil
@@ -16,7 +19,23 @@ from .validator import validate_settings
 
 
 def run_build(settings: dict, context: str, build: bool, clean: bool, tag: list[str]) -> list:
-    """Run the build process."""
+    """Run the build process.
+
+    This processes the ``settings``, generates the required files, and then runs the Docker build process.
+
+    :param settings: The settings parsed from the configuration file
+    :type settings: dict
+    :param context: The directory within which to run the build
+    :type context: str
+    :param build: Whether to automatically invoke ``docker build``
+    :type build: bool
+    :param clean: Whether to automatically clean all generated files
+    :type clean: bool
+    :param tag: A list of tags to pass to docker
+    :type tag: list[str]
+    :return: A list with any errors that occured during processing
+    :rtype: list
+    """
     if isinstance(settings, dict):
         env = Environment(loader=PackageLoader('ou_container_builder', 'templates'),
                           autoescape=False)

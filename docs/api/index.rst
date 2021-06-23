@@ -4,8 +4,14 @@ API
 The API documentation is primarily meant for developers.
 
 .. toctree::
-    :maxdepth: 1
 
-    jupyter_notebook
+    main
+    generators
+    generators_jupyter_notebook
+    generators_web_app
+    packs
+    packs_content
+    packs_mariadb
+    packs_services
+    packs_tutorial_server
     validator
-    web_app

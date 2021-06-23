@@ -6,8 +6,20 @@ from jinja2 import Environment
 from ..utils import merge_settings
 
 
-def setup(context, env, settings):
-    """Run the setup for the Web Applications generator."""
+def setup(context: str, env: Environment, settings: dict) -> dict:
+    """Run the setup for the Web Applications generator.
+
+    Merges the required settings for Web Applications into the settings.
+
+    :param context: The context path within which the generation is running
+    :type context: str
+    :param env: The Jinja2 environment to use for loading and rendering templates
+    :type env: :class:`~jinja2.environment.Environment`
+    :param settings: The settings parsed from the configuration file
+    :type settings: dict
+    :return: The updated settings
+    :rtype: dict
+    """
     settings = merge_settings(settings, {
         'packages': {
             'pip': [
@@ -42,6 +54,8 @@ def setup(context, env, settings):
 
 def generate(context: str, env: Environment, settings: dict):
     """Generate the Dockerfile for one or more web applications.
+
+    This generates the ``Dockerfile``, ``start-web-app.sh``, and ``jupyter_server_config.py`` files.
 
     :param context: The context path within which the generation is running
     :type context: str

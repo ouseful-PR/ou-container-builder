@@ -1,4 +1,4 @@
-"""Pack to run services."""
+"""Pack to setup and run system services."""
 import os
 
 from jinja2 import Environment
@@ -6,8 +6,20 @@ from jinja2 import Environment
 from ..utils import merge_settings
 
 
-def apply_pack(context: str, env: Environment, settings: dict):
-    """Apply the services pack."""
+def apply_pack(context: str, env: Environment, settings: dict) -> dict:
+    """Apply the services pack.
+
+    Automatically generates a sudoers file that ensures that the default user can start and stop all services.
+
+    :param context: The context path within which the generation is running
+    :type context: str
+    :param env: The Jinja2 environment to use for loading and rendering templates
+    :type env: :class:`~jinja2.environment.Environment`
+    :param settings: The settings parsed from the configuration file
+    :type settings: dict
+    :return: The updated settings
+    :rtype: dict
+    """
     settings = merge_settings(settings, {
         'content': [
             {

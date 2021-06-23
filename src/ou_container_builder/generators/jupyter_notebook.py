@@ -6,8 +6,20 @@ from jinja2 import Environment
 from ou_container_builder.utils import merge_settings
 
 
-def setup(context: str, env: Environment, settings: dict):
-    """Run the setup for the Jupyter Notebook generator."""
+def setup(context: str, env: Environment, settings: dict) -> dict:
+    """Run the setup for the Jupyter Notebook generator.
+
+    Merges the required settings for Jupyter Notebooks into the settings.
+
+    :param context: The context path within which the generation is running
+    :type context: str
+    :param env: The Jinja2 environment to use for loading and rendering templates
+    :type env: :class:`~jinja2.environment.Environment`
+    :param settings: The settings parsed from the configuration file
+    :type settings: dict
+    :return: The updated settings
+    :rtype: dict
+    """
     settings = merge_settings(settings, {
         'packages': {
             'pip': [
@@ -42,6 +54,8 @@ def setup(context: str, env: Environment, settings: dict):
 
 def generate(context: str, env: Environment, settings: dict):
     """Generate the Dockerfile for a Jupyter Notebook container.
+
+    This generates the ``Dockerfile``, ``jupyter_notebook_config.py``, and ``start-notebook.sh`` files.
 
     :param context: The context path within which the generation is running
     :type context: str
