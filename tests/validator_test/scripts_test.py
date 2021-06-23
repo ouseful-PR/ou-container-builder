@@ -13,23 +13,25 @@ REQUIRED_SETTINGS = {
 }
 
 
-def test_scripts_config():
+def test_build_scripts_config():
     """Test that the optional scripts settings pass."""
     settings = deepcopy(REQUIRED_SETTINGS)
-    settings['scripts'] = [
-        {
-            'inline': [
-                'line1',
-                'line2'
-            ]
-        },
-        {
-            'inline': [
-                'line1',
-                'line2'
-            ]
-        }
-    ]
+    settings['scripts'] = {
+        'build':     [
+            {
+                'inline': [
+                    'line1',
+                    'line2'
+                ]
+            },
+            {
+                'inline': [
+                    'line1',
+                    'line2'
+                ]
+            }
+        ]
+    }
 
     validated = validate_settings(settings)
     assert isinstance(validated, dict) is True
@@ -39,10 +41,12 @@ def test_invalid_script_type():
     """Test that an invalid script type fails."""
     settings = deepcopy(REQUIRED_SETTINGS)
     settings['scripts'] = {
-        'file': [
-            'package1',
-            'package2'
-        ]
+        'build': {
+            'file': [
+                'package1',
+                'package2'
+            ]
+        }
     }
 
     validated = validate_settings(settings)
