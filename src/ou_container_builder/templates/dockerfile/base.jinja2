@@ -19,11 +19,13 @@ RUN mkdir /home/$USER && \
 RUN apt-get update -y && \
     apt-get install -y tini{% if sources and sources.apt %} curl gnupg{% endif %}{% if content%} git{% endif%}
 
+{% block hacks %}
 {% if hacks %}
   {% if 'missing-man1' in hacks %}
 RUN mkdir -p /usr/share/man/man1
   {% endif %}
 {% endif %}
+{% endblock %}
 
 {% block apt_sources %}
   {% if sources and sources.apt %}
@@ -47,19 +49,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y {{ ' '.join(packages.apt) 
 RUN pip install --no-cache-dir {{ ' '.join(packages.pip)}}
   {% endif %}
 {% endblock %}
-
-{% if packs %}
-  {% block packs %}
-    {% if 'tutorial-server' in packs %}
-COPY ou-builder-build/tutorial-server.ini /etc/tutorial-server/production.ini
-    {% endif %}
-    {% if 'mariadb' in packs %}
-COPY ou-builder-build/mariadb-setup.sh /usr/bin/mariadb-setup.sh
-RUN chmod a+x /usr/bin/mariadb-setup.sh && \
-    printf "ou ALL=NOPASSWD: /usr/bin/mariadb-setup.sh\nou ALL=NOPASSWD: /usr/sbin/service mysql start\nou ALL=NOPASSWD: /usr/sbin/service mysql stop\n" > /etc/sudoers.d/99-mariadb
-    {% endif %}
-  {% endblock %}
-{% endif %}
 
 {% if content or (scripts and scripts.startup) or services %}
   {% block content_setup %}

@@ -175,7 +175,7 @@ schema = {
         'type': 'list',
         'schema': {
             'type': 'string',
-            'allowed': ['tutorial-server', 'tutorial-server-php', 'mariadb']
+            'allowed': ['tutorial-server', 'mariadb']
         }
     },
     'tutorial_server': {
@@ -207,6 +207,11 @@ schema = {
                 'type': 'string',
                 'required': True,
                 'empty': False
+            },
+            'php-cgi': {
+                'type': 'boolean',
+                'required': False,
+                'default': False
             }
         }
     },

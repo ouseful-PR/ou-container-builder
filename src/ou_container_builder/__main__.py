@@ -4,7 +4,6 @@ import os
 import shutil
 import subprocess
 
-from copy import deepcopy
 from jinja2 import Environment, PackageLoader
 from yaml import load
 try:
@@ -12,36 +11,8 @@ try:
 except ImportError:
     from yaml import Loader
 
-from . import jupyter_notebook, web_app
+from . import generators, packs
 from .validator import validate_settings
-
-
-def merge_settings(base: dict, new: dict) -> dict:
-    """Return a new dictionary created by merging the settings from ``new`` into ``base``.
-
-    :param base: The base dictionary to merge into
-    :type base: ``dict``
-    :param new: The new dictionary to merge
-    :type new: ``dict``
-    :return: A new merged dictionary
-    :rtype: ``dict``
-    """
-    result = {}
-
-    for base_key, base_value in list(base.items()):
-        if base_key not in new:
-            result[base_key] = deepcopy(base_value)
-        else:
-            if isinstance(base_value, list):
-                result[base_key] = list(base_value + new[base_key])
-            elif isinstance(base_value, dict):
-                result[base_key] = merge_settings(base_value, new[base_key])
-            else:
-                result[base_key] = new[base_key]
-    for new_key, new_value in list(new.items()):
-        if new_key not in base:
-            result[new_key] = deepcopy(new_value)
-    return result
 
 
 @click.command()
@@ -77,60 +48,21 @@ def main(context, build, clean, tag):
         # Handle packs
         if 'packs' in settings and settings['packs']:
             if 'tutorial-server' in settings['packs']:
-                settings = merge_settings(settings, {'packages': {'pip': ['tutorial-server>=0.7.0']}})
-                with open(os.path.join(context, 'ou-builder-build', 'tutorial-server.ini'), 'w') as out_f:
-                    tmpl = env.get_template('tutorial-server.ini')
-                    out_f.write(tmpl.render(**settings))
-            if 'tutorial-server-php' in settings['packs']:
-                settings = merge_settings(settings, {'packages': {'apt': ['php-cgi']}})
+                settings = packs.tutorial_server(settings, env, context)
             if 'mariadb' in settings['packs']:
-                settings = merge_settings(settings, {
-                    'packages': {
-                        'apt': ['mariadb-server', 'sudo']
-                    },
-                    'scripts': {
-                        'build': [
-                            {
-                                'inline': [
-                                    'mkdir -p /run/mysqld',
-                                    'sed -e "s#datadir.*=.*#datadir = $HOME/mariadb#" -e "s#user.*=.*#user = ou#" -i /etc/mysql/mariadb.conf.d/50-server.cnf',  # noqa: E501
-                                    'chown ou: /var/log/mysql/error.log /run/mysqld'
-                                ]
-                            },
-                        ],
-                        'startup': [
-                            {
-                                'cmd': 'sudo /usr/bin/mariadb-setup.sh'
-                            }
-                        ]
-                    },
-                    'services': [
-                        'mysql'
-                    ],
-                    'content': [
-                        {
-                            'source': '/var/lib/mysql',
-                            'target': 'mariadb',
-                            'overwrite': 'never'
-                        }
-                    ]
-                })
-                with open(os.path.join(context, 'ou-builder-build', 'mariadb-setup.sh'), 'w') as out_f:
-                    tmpl = env.get_template('mariadb-setup.sh')
-                    out_f.write(tmpl.render(**settings))
+                settings = packs.mariadb(settings, env, context)
+
+        # Handle automatic hacks
+        if 'packages' in settings and 'apt' in settings['packages']:
+            if 'openjdk-11-jdk' in settings['packages']['apt']:
+                if 'hacks' in settings:
+                    if 'missing-man1' not in settings['hacks']:
+                        settings['hacks'].append('missing-man1')
+                else:
+                    settings['hacks'] = ['missing-man1']
 
         settings = validate_settings(settings)
         if isinstance(settings, dict):
-
-            # Handle automatic hacks
-            if 'packages' in settings and 'apt' in settings['packages']:
-                if 'openjdk-11-jdk' in settings['packages']['apt']:
-                    if 'hacks' in settings:
-                        if 'missing-man1' not in settings['hacks']:
-                            settings['hacks'].append('missing-man1')
-                    else:
-                        settings['hacks'] = ['missing-man1']
-
             # Sort package lists
             if 'packages' in settings:
                 if 'apt' in settings['packages']:
@@ -148,17 +80,16 @@ def main(context, build, clean, tag):
 
             # Generate the Dockerfiles
             if settings['type'] == 'jupyter-notebook':
-                jupyter_notebook.generate(context, env, settings)
+                generators.jupyter_notebook(context, env, settings)
             elif settings['type'] == 'web-app':
-                web_app.generate(context, env, settings)
+                generators.web_app(context, env, settings)
 
             if build:
                 cmd = ['docker', 'build', context]
                 if tag:
                     for t in tag:
                         cmd.append('--tag')
-                        cmd.append(f'mmh352/{settings["module"]["code"].lower()}' +
-                                   f'-{settings["module"]["presentation"].lower()}:{t}')
+                        cmd.append(t)
                 subprocess.run(cmd)
                 if clean:
                     os.unlink(os.path.join(context, 'Dockerfile'))
