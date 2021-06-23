@@ -1,10 +1,12 @@
 """Pack to copy content."""
 import os
 
+from jinja2 import Environment
+
 from ..utils import merge_settings
 
 
-def apply_pack(settings, env, context):
+def apply_pack(context: str, env: Environment, settings: dict):
     """Apply the content pack."""
     if ('content' in settings and settings['content']) \
             or ('scripts' in settings and 'startup' in settings['scripts'] and settings['scripts']['startup']) \

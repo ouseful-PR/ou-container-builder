@@ -1,10 +1,12 @@
 """Pack to install the MariaDB database."""
 import os
 
+from jinja2 import Environment
+
 from ..utils import merge_settings
 
 
-def apply_pack(settings, env, context):
+def apply_pack(context: str, env: Environment, settings: dict):
     """Apply the mariadb pack."""
     settings = merge_settings(settings, {
         'packages': {

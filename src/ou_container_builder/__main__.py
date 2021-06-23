@@ -28,9 +28,9 @@ def run_build(settings: dict, context: str, build: bool, clean: bool, tag: list[
         # Handle optional packs
         if 'packs' in settings and settings['packs']:
             if 'tutorial-server' in settings['packs']:
-                settings = packs.tutorial_server(settings, env, context)
+                settings = packs.tutorial_server(context, env, settings)
             if 'mariadb' in settings['packs']:
-                settings = packs.mariadb(settings, env, context)
+                settings = packs.mariadb(context, env, settings)
 
         # Setup the generators
         if settings['type'] == 'jupyter-notebook':
@@ -40,8 +40,8 @@ def run_build(settings: dict, context: str, build: bool, clean: bool, tag: list[
 
         # Handle core packs
         if 'services' in settings:
-            settings = packs.services(settings, env, context)
-        settings = packs.content(settings, env, context)
+            settings = packs.services(context, env, settings)
+        settings = packs.content(context, env, settings)
 
         # Handle automatic hacks
         if 'packages' in settings and 'apt' in settings['packages']:

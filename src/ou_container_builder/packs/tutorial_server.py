@@ -1,10 +1,12 @@
 """Pack to install the tutorial_sever."""
 import os
 
+from jinja2 import Environment
+
 from ..utils import merge_settings
 
 
-def apply_pack(settings, env, context):
+def apply_pack(context: str, env: Environment, settings: dict):
     """Apply the tutorial-server pack."""
     # Extend the settings
     additional_settings = {
