@@ -42,3 +42,15 @@ Each script is configured using the following settings:
     Startup scripts are run **before** any :doc:`services <services>` are started.
 
     Shutdown scripts are run **after** any :doc:`services <services>` are stopped.
+
+Environment Variables
+---------------------
+
+The following environment variables are available for use in scripts:
+
+* ``USER="ou"`` - the name of the user the container is run under
+* ``UID="1000"`` - the id of the user the container is run under
+* ``GID="100"`` - the group id the container is run under
+* ``MODULE_CODE="$SETTING"`` - the module's code. Taken from the :doc:`required module setting <required>`.
+* ``MODULE_PRESENTATION="$SETTING"`` - the module's presentatoon. Taken from the :doc:`required module setting <required>`.
+* ``HOME="/home/$USER/$MODULE_CODE-$MODULE_PRESENTATION"``
