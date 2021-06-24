@@ -22,9 +22,7 @@ def apply_pack(context: str, env: Environment, settings: dict) -> dict:
     :return: The updated settings
     :rtype: dict
     """
-    if ('content' in settings and settings['content']) \
-            or ('scripts' in settings and 'startup' in settings['scripts'] and settings['scripts']['startup']) \
-            or ('services' in settings and settings['services']):
+    if 'content' in settings and settings['content']:
         settings = merge_settings(settings, {
             'flags': {
                 'ou_container_content': True

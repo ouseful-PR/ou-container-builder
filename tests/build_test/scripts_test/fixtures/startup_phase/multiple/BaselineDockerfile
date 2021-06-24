@@ -1,0 +1,44 @@
+FROM python:3.9-slim-buster
+
+ENV USER="ou"
+ENV UID="1000"
+ENV GID="100"
+ENV MODULE_CODE="Test"
+ENV MODULE_PRESENTATION="1"
+ENV HOME="/home/$USER/$MODULE_CODE-$MODULE_PRESENTATION"
+
+USER root
+
+RUN mkdir /home/$USER && \
+    useradd -u $UID -g $GID -d $HOME -m $USER
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y tini
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y git
+
+RUN pip install --no-cache-dir "git+https://github.com/mmh352/ou-container-content.git" "jupyterhub==1.3.0" "notebook>=6.0.0,<7"
+
+RUN mkdir -p /etc/module-content/data
+COPY ou-builder-build/content_config.yaml /etc/module-content/config.yaml
+
+COPY ou-builder-build/start-notebook.sh /usr/bin/start.sh
+
+COPY ou-builder-build/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
+
+COPY ou-builder-build/startup-script-09ac982633875aa012653ac7edefe40ee2afb3200957ed7f6f6aa8644c08bdb5 /usr/bin/startup-script-09ac982633875aa012653ac7edefe40ee2afb3200957ed7f6f6aa8644c08bdb5
+
+RUN chmod a+x /usr/bin/start.sh
+
+RUN chmod a+x /usr/bin/startup-script-09ac982633875aa012653ac7edefe40ee2afb3200957ed7f6f6aa8644c08bdb5
+
+RUN chown -R $USER:$GID $HOME /etc/module-content
+
+USER $USER
+
+WORKDIR $HOME
+ENTRYPOINT ["tini", "-g", "--"]
+
+EXPOSE 8888
+
+CMD ["start.sh"]

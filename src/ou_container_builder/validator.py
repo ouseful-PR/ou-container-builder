@@ -152,8 +152,12 @@ schema = {
                 'schema': {
                     'type': 'dict',
                     'schema': {
-                        'cmd': {
-                            'type': 'string'
+                        'commands': {
+                            'type': 'list',
+                            'schema': {
+                                'type': 'string'
+                            },
+                            'coerce': (ensure_list(multiline_splitter), filter_empty_items)
                         }
                     }
                 }

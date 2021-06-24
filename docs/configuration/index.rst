@@ -14,7 +14,7 @@ command-line.
     packs/index
     container_type/index
     packages/index
-    scripts/index
+    scripts
     services
     hacks
     flags

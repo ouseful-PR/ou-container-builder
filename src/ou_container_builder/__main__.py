@@ -61,6 +61,8 @@ def run_build(settings: dict, context: str, build: bool, clean: bool, tag: list)
         # Handle core packs
         if 'services' in settings:
             settings = packs.services(context, env, settings)
+        if 'scripts' in settings:
+            settings = packs.scripts(context, env, settings)
         settings = packs.content(context, env, settings)
 
         # Handle automatic hacks

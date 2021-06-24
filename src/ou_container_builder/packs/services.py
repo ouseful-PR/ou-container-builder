@@ -27,7 +27,10 @@ def apply_pack(context: str, env: Environment, settings: dict) -> dict:
                 'target': '/etc/sudoers.d/99-services',
                 'overwrite': 'always'
             }
-        ]
+        ],
+        'flags': {
+            'ou_container_content': True
+        }
     })
     with open(os.path.join(context, 'ou-builder-build', 'services.sudoers'), 'w') as out_f:
         tmpl = env.get_template('packs/services/sudoers')

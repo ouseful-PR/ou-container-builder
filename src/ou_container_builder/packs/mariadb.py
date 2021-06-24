@@ -39,7 +39,9 @@ def apply_pack(context: str, env: Environment, settings: dict) -> dict:
             ],
             'startup': [
                 {
-                    'cmd': 'sudo /usr/bin/mariadb-setup.sh'
+                    'commands': [
+                        'sudo /usr/bin/mariadb-setup.sh'
+                    ]
                 }
             ]
         },

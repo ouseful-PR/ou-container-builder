@@ -11,8 +11,8 @@ paths:
 {% if scripts and scripts.startup %}
 scripts:
   {% for script in scripts.startup %}
-    {% if script.cmd %}
-  - cmd: {{ script.cmd }}
+    {% if script.commands %}
+  - cmd: {{ script.commands[0] }}
     {% endif %}
   {% endfor %}
 {% endif %}

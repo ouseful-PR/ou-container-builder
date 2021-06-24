@@ -3,7 +3,7 @@ import os
 
 from ou_container_builder.__main__ import run_build
 
-from ..utils import clean_build, compare_dockerfiles
+from ..utils import clean_build, compare_files
 
 
 BASEDIR = os.path.join('tests', 'build_test', 'basic_test', 'fixtures')
@@ -23,7 +23,7 @@ def test_minimal_jupyter_notebook():
     }
     result = run_build(settings, context, False, False, [])
     assert not result
-    compare_dockerfiles(os.path.join(context, 'BaselineDockerfile'), os.path.join(context, 'Dockerfile'))
+    compare_files(os.path.join(context, 'BaselineDockerfile'), os.path.join(context, 'Dockerfile'))
 
     clean_build(context)
 
@@ -42,6 +42,6 @@ def test_minimal_web_app():
     }
     result = run_build(settings, context, False, False, [])
     assert not result
-    compare_dockerfiles(os.path.join(context, 'BaselineDockerfile'), os.path.join(context, 'Dockerfile'))
+    compare_files(os.path.join(context, 'BaselineDockerfile'), os.path.join(context, 'Dockerfile'))
 
     clean_build(context)
