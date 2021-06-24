@@ -141,7 +141,8 @@ schema = {
                             'type': 'list',
                             'schema': {
                                 'type': 'string'
-                            }
+                            },
+                            'coerce': (ensure_list(multiline_splitter), filter_empty_items)
                         }
                     }
                 }
