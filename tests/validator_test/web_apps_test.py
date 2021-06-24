@@ -89,19 +89,41 @@ def test_empty_values():
     assert 'web_apps.0.cmdline: empty values not allowed' in validated
 
 
-def test_cmdline_must_be_list():
-    """Tests that the cmdline value must be a list."""
+def test_cmdline_must_be_list_or_string():
+    """Tests that the cmdline value must be a list or a string."""
     settings = deepcopy(REQUIRED_SETTINGS)
     settings['web_apps'] = [
         {
             'path': 'mount',
-            'cmdline': 'cmd'
+            'cmdline': 'cmd param'
+        }
+    ]
+
+    validated = validate_settings(settings)
+    assert isinstance(validated, dict) is True
+
+    settings = deepcopy(REQUIRED_SETTINGS)
+    settings['web_apps'] = [
+        {
+            'path': 'mount',
+            'cmdline': ['cmd', 'param']
+        }
+    ]
+
+    validated = validate_settings(settings)
+    assert isinstance(validated, dict) is True
+
+    settings = deepcopy(REQUIRED_SETTINGS)
+    settings['web_apps'] = [
+        {
+            'path': 'mount',
+            'cmdline': {'name'}
         }
     ]
 
     validated = validate_settings(settings)
     assert isinstance(validated, list) is True
-    assert 'web_apps.0.cmdline: must be of list type' in validated
+    assert 'web_apps.0.cmdline.0: must be of string type' in validated
 
 
 def test_port_must_be_numeric():

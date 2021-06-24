@@ -310,7 +310,7 @@ def validate_settings(settings: dict) -> Union[dict, bool]:
     """
     validator = Validator(schema)
     if settings and validator.validate(settings):
-        return validator.normalized(settings)
+        return validator.document
     elif settings is None:
         return ['Your configuration file is empty']
     else:
