@@ -14,7 +14,7 @@ REQUIRED_SETTINGS = {
 
 
 def test_build_scripts_config():
-    """Test that the optional scripts settings pass."""
+    """Test that the optional scripts settings passes for build scripts."""
     settings = deepcopy(REQUIRED_SETTINGS)
     settings['scripts'] = {
         'build':     [
@@ -29,6 +29,50 @@ def test_build_scripts_config():
                     'line1',
                     'line2'
                 ]
+            }
+        ]
+    }
+
+    validated = validate_settings(settings)
+    assert isinstance(validated, dict) is True
+
+
+def test_startup_scripts_config():
+    """Test that the optional scripts settings passes for startup scripts."""
+    settings = deepcopy(REQUIRED_SETTINGS)
+    settings['scripts'] = {
+        'startup':     [
+            {
+                'commands': [
+                    'line1',
+                    'line2'
+                ]
+            },
+            {
+                'commands': '''line1
+line2'''
+            }
+        ]
+    }
+
+    validated = validate_settings(settings)
+    assert isinstance(validated, dict) is True
+
+
+def test_shutdown_scripts_config():
+    """Test that the optional scripts settings passes for shutdown scripts."""
+    settings = deepcopy(REQUIRED_SETTINGS)
+    settings['scripts'] = {
+        'shutdown':     [
+            {
+                'commands': [
+                    'line1',
+                    'line2'
+                ]
+            },
+            {
+                'commands': '''line1
+line2'''
             }
         ]
     }

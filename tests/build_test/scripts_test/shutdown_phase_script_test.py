@@ -1,4 +1,4 @@
-"""Test scripts for container startup."""
+"""Test scripts for container shutdown."""
 import os
 
 from ou_container_builder.__main__ import run_build
@@ -9,9 +9,9 @@ from ..utils import clean_build, compare_files
 BASEDIR = os.path.join('tests', 'build_test', 'scripts_test', 'fixtures')
 
 
-def test_startup_single_command_script():
-    """Test a single-command startup-time script."""
-    context = os.path.join(BASEDIR, 'startup_phase', 'single')
+def test_shutdown_single_command_script():
+    """Test a single-command shutdown-time script."""
+    context = os.path.join(BASEDIR, 'shutdown_phase', 'single')
     clean_build(context)
 
     settings = {
@@ -21,10 +21,10 @@ def test_startup_single_command_script():
         },
         'type': 'jupyter-notebook',
         'scripts': {
-            'startup': [
+            'shutdown': [
                 {
                     'commands': [
-                        'sudo service nginx start'
+                        'sudo service nginx stop'
                     ]
                 }
             ]
@@ -39,9 +39,9 @@ def test_startup_single_command_script():
     clean_build(context)
 
 
-def test_startup_multiple_command_script():
-    """Test an multi-command startup-time script."""
-    context = os.path.join(BASEDIR, 'startup_phase', 'multiple')
+def test_shutdown_multiple_command_script():
+    """Test a multi-command shutdown-time script."""
+    context = os.path.join(BASEDIR, 'shutdown_phase', 'multiple')
     clean_build(context)
 
     settings = {
@@ -51,11 +51,11 @@ def test_startup_multiple_command_script():
         },
         'type': 'jupyter-notebook',
         'scripts': {
-            'startup': [
+            'shutdown': [
                 {
                     'commands': [
-                        'sudo service nginx start',
-                        'sudo service docker start'
+                        'sudo service nginx stop',
+                        'sudo service docker stop'
                     ]
                 }
             ]

@@ -1,0 +1,4 @@
+paths:
+scripts:
+  shutdown:
+    - cmd: /usr/bin/shutdown-script-16a97deded55765c50eb787a8aef7bae7eee94c829a2a888370aab511e44a2cd

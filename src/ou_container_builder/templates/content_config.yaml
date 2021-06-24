@@ -8,13 +8,24 @@ paths:
     {% endif %}
   {% endfor %}
 {% endif %}
-{% if scripts and scripts.startup %}
+{% if scripts and (scripts.startup or scripts.shutdown) %}
 scripts:
-  {% for script in scripts.startup %}
-    {% if script.commands %}
-  - cmd: {{ script.commands[0] }}
-    {% endif %}
-  {% endfor %}
+  {% if scripts.startup %}
+    startup:
+      {% for script in scripts.startup %}
+        {% if script.commands %}
+      - cmd: {{ script.commands[0] }}
+        {% endif %}
+      {% endfor %}
+  {% endif %}
+  {% if scripts.shutdown %}
+    shutdown:
+      {% for script in scripts.shutdown %}
+        {% if script.commands %}
+      - cmd: {{ script.commands[0] }}
+        {% endif %}
+      {% endfor %}
+  {% endif %}
 {% endif %}
 {% if services %}
 services:

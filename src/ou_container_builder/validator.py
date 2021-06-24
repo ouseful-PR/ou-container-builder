@@ -161,6 +161,21 @@ schema = {
                         }
                     }
                 }
+            },
+            'shutdown': {
+                'type': 'list',
+                'schema': {
+                    'type': 'dict',
+                    'schema': {
+                        'commands': {
+                            'type': 'list',
+                            'schema': {
+                                'type': 'string'
+                            },
+                            'coerce': (ensure_list(multiline_splitter), filter_empty_items)
+                        }
+                    }
+                }
             }
         }
     },

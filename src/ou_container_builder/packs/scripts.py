@@ -52,5 +52,38 @@ def apply_pack(context: str, env: Environment, settings: dict) -> dict:
                     f'/usr/bin/{script_name}'
                 ]
         settings = merge_settings(settings, new_settings)
+    if 'shutdown' in settings['scripts']:
+        settings = merge_settings(settings, {
+            'flags': {
+                'ou_container_content': True
+            }
+        })
+        new_settings = {}
+        for script in settings['scripts']['shutdown']:
+            if len(script['commands']) > 1:
+                hash = sha256('\n'.join(script['commands']).encode())
+                script_name = f'shutdown-script-{hash.hexdigest()}'
+                with open(os.path.join(context, 'ou-builder-build', script_name), 'w') as out_f:
+                    out_f.write('\n'.join(script['commands']))
+                new_settings = merge_settings(new_settings, {
+                    'content': [
+                        {
+                            'source': os.path.join('ou-builder-build', script_name),
+                            'target': f'/usr/bin/{script_name}',
+                            'overwrite': 'always'
+                        }
+                    ],
+                    'scripts': {
+                        'build': [
+                            {
+                                'commands': [f'chmod a+x /usr/bin/{script_name}']
+                            }
+                        ]
+                    }
+                })
+                script['commands'] = [
+                    f'/usr/bin/{script_name}'
+                ]
+        settings = merge_settings(settings, new_settings)
 
     return settings

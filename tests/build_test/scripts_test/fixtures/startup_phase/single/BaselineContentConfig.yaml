@@ -1,3 +1,4 @@
 paths:
 scripts:
-  - cmd: sudo service nginx start
+  startup:
+    - cmd: sudo service nginx start

@@ -1,0 +1,4 @@
+paths:
+scripts:
+  shutdown:
+    - cmd: sudo service nginx stop
