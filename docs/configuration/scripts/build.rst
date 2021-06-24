@@ -7,7 +7,7 @@ Build scripts are run at container image build time and configured as follows:
 
     scripts:
       build:
-        - inline:     # Inline definition of the script
+        - commands:     # Inline definition of the script
 
 * ``inline``: Specifies an inline script. Inline scripts are defined in the ``ContainerConfig.yaml``. They can either
   be specified as a list of commands:
@@ -16,7 +16,7 @@ Build scripts are run at container image build time and configured as follows:
 
       scripts:
         build:
-          - inline:
+          - commands:
             - touch /etc/notes.txt
             - rm /etc/notes.txt
 
@@ -26,7 +26,7 @@ Build scripts are run at container image build time and configured as follows:
 
       scripts:
       build:
-        - inline: |
+        - commands: |
             touch /etc/notes.txt
             rm /etc/notes.txt
 

@@ -137,7 +137,7 @@ schema = {
                 'schema': {
                     'type': 'dict',
                     'schema': {
-                        'inline': {
+                        'commands': {
                             'type': 'list',
                             'schema': {
                                 'type': 'string'

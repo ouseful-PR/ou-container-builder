@@ -42,7 +42,7 @@ def setup(context: str, env: Environment, settings: dict) -> dict:
         'scripts': {
             'build': [
                 {
-                    'inline': [
+                    'commands': [
                         'chmod a+x /usr/bin/start.sh'
                     ]
                 }

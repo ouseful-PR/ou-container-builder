@@ -79,8 +79,10 @@ COPY {{ part.source }} /etc/module-content/data/{{ part.target }}
 {% block scripts %}
   {% if scripts and scripts.build %}
     {% for script in scripts.build %}
-      {% if script.inline %}
-RUN {{ ' && \\\n    '.join(script.inline) }}
+      {% if script.commands %}
+RUN {{ ' && \\\n    '.join(script.commands) }}
+      {% elif script.cmd %}
+RUN {{ script.cmd }}
       {% endif %}
     {% endfor %}
   {% endif %}

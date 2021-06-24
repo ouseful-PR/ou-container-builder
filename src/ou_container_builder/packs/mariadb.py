@@ -28,7 +28,7 @@ def apply_pack(context: str, env: Environment, settings: dict) -> dict:
         'scripts': {
             'build': [
                 {
-                    'inline': [
+                    'commands': [
                         'mkdir -p /run/mysqld',
                         'sed -e "s#datadir.*=.*#datadir = $HOME/mariadb#" -e "s#user.*=.*#user = ou#" -i /etc/mysql/mariadb.conf.d/50-server.cnf',  # noqa: E501
                         'chown ou: /var/log/mysql/error.log /run/mysqld',

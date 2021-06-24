@@ -19,13 +19,13 @@ def test_build_scripts_config():
     settings['scripts'] = {
         'build':     [
             {
-                'inline': [
+                'commands': [
                     'line1',
                     'line2'
                 ]
             },
             {
-                'inline': [
+                'commands': [
                     'line1',
                     'line2'
                 ]

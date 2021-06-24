@@ -8,7 +8,7 @@ packages:
    - openjdk-11-jdk
 scripts:
   build:
-    - inline: |
+    - commands: |
         wget --no-check-certificate https://github.com/OpenRefine/OpenRefine/releases/download/3.3/openrefine-linux-3.3.tar.gz
         mkdir /var/openrefine
         tar -xzf openrefine-linux-3.3.tar.gz --directory /var/openrefine
