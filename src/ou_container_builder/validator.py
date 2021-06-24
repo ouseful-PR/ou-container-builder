@@ -1,6 +1,44 @@
 """Configuration validator for the OU Container Builder ContainerConfig.yaml."""
+import shlex
+
 from cerberus import Validator
 from typing import Union
+
+
+def multiline_splitter(value: str):
+    """Split the value on new-lines.
+
+    :param value: The string value to split
+    :type value: str
+    :return: The split list
+    :rtype: list
+    """
+    return value.split('\n')
+
+
+def ensure_list(splitter):
+    """Create a coercion function that ensures the value is a list.
+
+    :param splitter: The splitting function to apply to strings
+    :type splitter: callable
+    :return: The split list or the original value
+    :rtype: list
+    """
+    def coercer(value):
+        """Coerce the value into list format."""
+        if isinstance(value, str):
+            return splitter(value)
+        elif isinstance(value, list):
+            return value
+        else:
+            return [value]
+
+    return coercer
+
+
+def filter_empty_items(value):
+    """Filter empty values from the list."""
+    return [line for line in value if line.strip()]
 
 
 schema = {
@@ -148,7 +186,8 @@ schema = {
                         'type': 'string',
                         'required': True,
                         'empty': False
-                    }
+                    },
+                    'coerce': (ensure_list(shlex.split), filter_empty_items)
                 },
                 'port': {
                     'type': 'integer',

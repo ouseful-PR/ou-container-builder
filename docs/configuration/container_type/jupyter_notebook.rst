@@ -36,8 +36,9 @@ Additionall the top-level ``web_apps`` key can be used to provide one or more we
 
 * ``path``: The URL path that the web application is hosted at. This **cannot** be ``/`` and must also not be a path
   used by anything else such as ``/lab`` or ``/tree``.
-* ``cmdline``: The command line to run. Each part of the command is provided as a list under this key. Two
-  substitution values are available:
+* ``cmdline``: The command line to run. This can either be a string, in which case it will be split using
+  `shlex.split <https://docs.python.org/3/library/shlex.html>`, or a list. In either case the following to substitution
+  variables can be used:
 
   * ``{port}`` is replaced with the random port the Jupyter proxy has selected for the web application.
   * ``{base_url}`` is replaced with the full path the application is hosted at. This will differ whether the
