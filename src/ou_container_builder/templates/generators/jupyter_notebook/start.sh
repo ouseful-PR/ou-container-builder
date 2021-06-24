@@ -3,7 +3,7 @@
 set -e
 
 {% if flags and flags.ou_container_content %}
-ou-container-content
+ou-container-content startup
 {% endif %}
 
 if [[ ! -z "${JUPYTERHUB_API_TOKEN}" ]]; then
@@ -11,3 +11,7 @@ if [[ ! -z "${JUPYTERHUB_API_TOKEN}" ]]; then
 else
     exec jupyter notebook --NotebookApp.config_file=/etc/jupyter/jupyter_notebook_config.py
 fi
+
+{% if flags and flags.ou_container_content %}
+ou-container-content shutdown
+{% endif %}
