@@ -31,6 +31,8 @@ RUN touch /etc/testing && \
 
 RUN chmod a+x /usr/bin/start.sh
 
+RUN ou-container-content prepare
+
 RUN chown -R $USER:$GID $HOME /etc/module-content
 
 USER $USER

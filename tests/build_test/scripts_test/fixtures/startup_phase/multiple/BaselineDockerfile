@@ -32,6 +32,8 @@ RUN chmod a+x /usr/bin/start.sh
 
 RUN chmod a+x /usr/bin/startup-script-09ac982633875aa012653ac7edefe40ee2afb3200957ed7f6f6aa8644c08bdb5
 
+RUN ou-container-content prepare
+
 RUN chown -R $USER:$GID $HOME /etc/module-content
 
 USER $USER
