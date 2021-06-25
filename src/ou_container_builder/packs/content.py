@@ -37,6 +37,13 @@ def apply_pack(context: str, env: Environment, settings: dict) -> dict:
                 'pip': [
                     'git+https://github.com/mmh352/ou-container-content.git'
                 ]
+            },
+            'scripts': {
+                'build': [
+                    {
+                        'commands': '''ou-container-content prepare'''
+                    }
+                ]
             }
         })
         with open(os.path.join(context, 'ou-builder-build', 'content_config.yaml'), 'w') as out_f:
