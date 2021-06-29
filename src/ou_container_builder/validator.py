@@ -61,6 +61,11 @@ schema = {
         'required': True,
         'allowed': ['jupyter-notebook', 'web-app']
     },
+    'base': {
+        'type': 'string',
+        'required': False,
+        'default': '3.9'
+    },
     'content': {
         'type': 'list',
         'schema': {

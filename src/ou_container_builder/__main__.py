@@ -4,6 +4,7 @@ Run ``ou-container-builder --help`` for help with the command-line parameters.
 """
 import click
 import os
+import re
 import shutil
 import subprocess
 
@@ -44,6 +45,10 @@ def run_build(settings: dict, context: str, build: bool, clean: bool, tag: list)
         if os.path.exists(os.path.join(context, 'ou-builder-build')):
             shutil.rmtree(os.path.join(context, 'ou-builder-build'))
         os.makedirs(os.path.join(context, 'ou-builder-build'))
+
+        # Handle base image
+        if re.match(r'3\.[789]', settings['base']):
+            settings['base'] = f'python:{settings["base"]}-slim-buster'
 
         # Handle optional packs
         if 'packs' in settings and settings['packs']:

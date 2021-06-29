@@ -1,5 +1,5 @@
 {% block from %}
-FROM python:3.9-slim-buster
+FROM {{ base }}
 {% endblock %}
 
 {% block environment %}
@@ -35,8 +35,8 @@ RUN mkdir -p /usr/share/man/man1
 RUN curl -fsSL "{{ source.key }}" | apt-key --keyring "/etc/apt/trusted.gpg.d/{{ source.name }}.gpg" add - && \
     echo "{{ source.deb }}" > "/etc/apt/sources.list.d/{{ source.name }}.list"
     {% endfor %}
-RUN apt-get update -y && \
-    apt-get dist-upgrade -y
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y
   {% endif %}
 {% endblock %}
 
