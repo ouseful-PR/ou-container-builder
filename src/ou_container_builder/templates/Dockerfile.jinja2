@@ -2,6 +2,10 @@
 FROM {{ base }}
 {% endblock %}
 
+{% block arguments %}
+ARG TARGETPLATFORM
+{% endblock %}
+
 {% block environment %}
 ENV USER="ou"
 ENV UID="1000"
@@ -48,7 +52,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y {{ ' '.join(packages.apt) 
 
 {% block pip %}
   {% if packages and packages.pip %}
-RUN pip install --no-cache-dir {% for package in packages.pip %}"{{ package }}" {% endfor %}
+RUN if [ "$TARGETPLATFORM" = "linux/arm/v7" ]; then pip install --no-cache-dir --extra-index-url=https://www.piwheels.org/simple {% for package in packages.pip %}"{{ package }}" {% endfor %}; else pip install --no-cache-dir {% for package in packages.pip %}"{{ package }}" {% endfor %}; fi
   {% endif %}
 {% endblock %}
 
