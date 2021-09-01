@@ -31,11 +31,8 @@ def apply_pack(context: str, env: Environment, settings: dict) -> dict:
     if settings['flags'] and settings['flags']['ou_container_content']:
         settings = merge_settings(settings, {
             'packages': {
-                'apt': [
-                    'git'
-                ],
                 'pip': [
-                    'git+https://github.com/mmh352/ou-container-content.git'
+                    'ou-container-content>=1.0.0-b1'
                 ]
             },
             'scripts': {
