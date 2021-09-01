@@ -1,5 +1,7 @@
 FROM python:3.9-slim-buster
 
+ARG TARGETPLATFORM
+
 ENV USER="ou"
 ENV UID="1000"
 ENV GID="100"
@@ -15,9 +17,7 @@ RUN mkdir /home/$USER && \
 RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y tini
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y git
-
-RUN pip install --no-cache-dir "git+https://github.com/mmh352/ou-container-content.git" "jupyter-server-proxy" "jupyterhub==1.3.0"
+RUN if [ "$TARGETPLATFORM" = "linux/arm/v7" ]; then pip install --no-cache-dir --extra-index-url=https://www.piwheels.org/simple "jupyter-server-proxy" "jupyterhub==1.3.0" "ou-container-content>=1.0.0-b1" ; else pip install --no-cache-dir "jupyter-server-proxy" "jupyterhub==1.3.0" "ou-container-content>=1.0.0-b1" ; fi
 
 RUN mkdir -p /etc/module-content/data
 COPY ou-builder-build/content_config.yaml /etc/module-content/config.yaml
