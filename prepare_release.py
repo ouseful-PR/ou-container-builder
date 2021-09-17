@@ -4,7 +4,7 @@ import re
 from typing import List
 
 
-VERSION = '1.0.0b1'
+VERSION = '1.0.0b2'
 
 
 def readlines(filename: str) -> List[str]:
@@ -30,5 +30,6 @@ def update_version(filename: str, pattern: str, version: str) -> None:
     writelines(filename, map(replace_version, readlines(filename)))
 
 
-update_version('docs/conf.py', r"(^release = ')[0-9]+\.[0-9]+\.[0-9]+(?:-b[0-9]+)?('$)",  VERSION)
-update_version('pyproject.toml', r'(^version = ")[0-9]+\.[0-9]+\.[0-9]+(?:-b[0-9]+)?("$)',  VERSION)
+update_version('docs/conf.py', r"(^release = ')[0-9]+\.[0-9]+\.[0-9]+(?:b[0-9]+)?('$)",  VERSION)
+update_version('pyproject.toml', r'(^version = ")[0-9]+\.[0-9]+\.[0-9]+(?:b[0-9]+)?("$)',  VERSION)
+update_version('CHANGELOG.md', r'(## )Dev($)',  VERSION)
