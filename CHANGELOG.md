@@ -1,5 +1,9 @@
 # Changelog
 
+## Dev
+
+* **Update**: Upgraded the ou-container-content to 1.0.2
+
 ## 1.0.1
 
 * **Update**: Upgrade the ou-container-content to 1.0.1
