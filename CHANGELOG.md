@@ -1,6 +1,6 @@
 # Changelog
 
-## Dev
+## 1.0.4
 
 * **Update**: Upgraded the ou-container-content to 1.0.4
 
