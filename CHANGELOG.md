@@ -1,5 +1,9 @@
 # Changelog
 
+## Dev
+
+* **Update**: Upgrade the tutorial-server to 0.9.0
+
 ## 1.0.4
 
 * **Update**: Upgraded the ou-container-content to 1.0.4
