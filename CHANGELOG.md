@@ -1,6 +1,6 @@
 # Changelog
 
-## Dev
+## 1.0.5
 
 * **Update**: Upgrade the tutorial-server to 1.0.0
 * **Update**: upgraded the ou-container-content to 1.1.0
