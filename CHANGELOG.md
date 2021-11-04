@@ -2,7 +2,8 @@
 
 ## Dev
 
-* **Update**: Upgrade the tutorial-server to 0.9.0
+* **Update**: Upgrade the tutorial-server to 1.0.0
+* **Update**: upgraded the ou-container-content to 1.1.0
 
 ## 1.0.4
 

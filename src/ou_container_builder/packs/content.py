@@ -32,7 +32,7 @@ def apply_pack(context: str, env: Environment, settings: dict) -> dict:
         settings = merge_settings(settings, {
             'packages': {
                 'pip': [
-                    'ou-container-content>=1.0.4'
+                    'ou-container-content>=1.1.0'
                 ]
             },
             'scripts': {

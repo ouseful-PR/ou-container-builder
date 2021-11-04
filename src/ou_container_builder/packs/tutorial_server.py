@@ -23,7 +23,7 @@ def apply_pack(context: str, env: Environment, settings: dict) -> dict:
     additional_settings = {
         'packages': {
             'pip': [
-                'tutorial-server>=0.9.0',
+                'tutorial-server>=1.0.0',
                 'jupyter-server-proxy'
             ]
         },
