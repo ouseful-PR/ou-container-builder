@@ -1,6 +1,6 @@
 # Changelog
 
-## Dev
+## 1.0.7
 
 * **Bugfix**: Security upgrades in dependencies
 
