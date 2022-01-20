@@ -1,5 +1,9 @@
 # Changelog
 
+## Dev
+
+* **Bugfix**: Security upgrades in dependencies
+
 ## 1.0.6
 
 * **Update**: Upgrade the tutorial-server to 1.0.2
