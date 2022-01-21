@@ -1,5 +1,9 @@
 # Changelog
 
+## Dev
+
+* **Bugfix**: Fixed a bug in the mariadb startup script
+
 ## 1.0.7
 
 * **Bugfix**: Security upgrades in dependencies
