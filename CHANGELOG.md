@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.9
+
+* **Update**: Dependencies updated
+
 ## 1.0.8
 
 * **Bugfix**: Fixed a bug in the mariadb startup script

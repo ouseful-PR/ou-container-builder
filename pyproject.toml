@@ -7,7 +7,7 @@ authors = ["Mark Hall <mark.hall@open.ac.uk>"]
 [tool.poetry.dependencies]
 python = "^3.7"
 pyyaml = "^5.4.1"
-jinja2 = "^2.11.3"
+jinja2 = "^3.0.0"
 click = "^7.1.2"
 cerberus = "^1.3.3"
 
