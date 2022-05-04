@@ -243,7 +243,7 @@ schema = {
         'type': 'list',
         'schema': {
             'type': 'string',
-            'allowed': ['tutorial-server', 'mariadb']
+            'allowed': ['tutorial-server', 'mariadb', 'openrefine']
         }
     },
     'tutorial_server': {
@@ -300,6 +300,16 @@ schema = {
                 'type': 'string',
                 'required': True,
                 'empty': False,
+            }
+        }
+    },
+    'openrefine': {
+        'type': 'dict',
+        'schema': {
+            'version': {
+                'type': 'string',
+                'required': True,
+                'empty': False
             }
         }
     },

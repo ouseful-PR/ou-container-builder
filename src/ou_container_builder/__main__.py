@@ -56,7 +56,8 @@ def run_build(settings: dict, context: str, build: bool, clean: bool, tag: list)
                 settings = packs.tutorial_server(context, env, settings)
             if 'mariadb' in settings['packs']:
                 settings = packs.mariadb(context, env, settings)
-
+            if 'openrefine' in settings['packs']:
+                settings = packs.openrefine(context, env, settings)
         # Setup the generators
         if settings['type'] == 'jupyter-notebook':
             settings = generators.jupyter_notebook.setup(context, env, settings)

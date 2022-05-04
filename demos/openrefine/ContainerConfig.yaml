@@ -1,20 +1,14 @@
 module:
-  code: OpenRefine
-  presentation: 21J
-type: web-app
+  code: XYZ123
+  presentation: 99A
+type: jupyter-notebook
+packs:
+  - openrefine
+openrefine:
+  version: '3.4.1' 
 packages:
-  apt:
-   - wget
-   - openjdk-11-jdk
-scripts:
-  build:
-    - commands: |
-        wget --no-check-certificate https://github.com/OpenRefine/OpenRefine/releases/download/3.3/openrefine-linux-3.3.tar.gz
-        mkdir /var/openrefine
-        tar -xzf openrefine-linux-3.3.tar.gz --directory /var/openrefine
-        rm openrefine-linux-3.3.tar.gz
+  pip:
+    - jupyter-server-proxy
 web_apps:
-  - path: openrefine
-    cmdline: /var/openrefine/openrefine-3.3/refine -i 0.0.0.0 -p "{port}" -d /home/ou-user/OpenRefine-21J
-    timeout: 120
-    default: true
+  - path:          openrefine
+    cmdline:       /var/openrefine/refine -i 0.0.0.0 -p {port} -d $HOME/openrefine

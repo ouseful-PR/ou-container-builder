@@ -14,4 +14,5 @@ The API documentation is primarily meant for developers.
     packs_mariadb
     packs_services
     packs_tutorial_server
+    packs_openrefine
     validator
