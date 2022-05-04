@@ -12,7 +12,7 @@ def apply_pack(context: str, env: Environment, settings: dict) -> dict:
 
     The openrefine application is not started by default.
 
-    We should perhaps provide a setting that does not start it by default, 
+    We should perhaps provide a setting that does not start it by default,
     eg for use in Jupyter container where a proxy call will autostart it.
 
     :param context: The context path within which the generation is running
