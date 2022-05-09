@@ -75,13 +75,13 @@ jobs:
         poetry run ou-container-builder --context demos/openrefine --no-build
 
     - name: Build the Jupyter Notebook demo
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v3
       with:
         push: false
         context: demos/jupyter-notebook
 
     - name: Build the Openrefine demo
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v3
       with:
         push: false
         context: demos/openrefine
